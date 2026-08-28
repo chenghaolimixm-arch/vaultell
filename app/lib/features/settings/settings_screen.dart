@@ -38,20 +38,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (enabled) {
       try {
         final ok = await _localAuth.authenticate(
-          localizedReason: '解锁 Insurance Profile App',
+          localizedReason: 'Unlock Insurance Profile App',
           options: const AuthenticationOptions(biometricOnly: true),
         );
         if (ok) {
           if (!mounted) return;
           setState(() => _appLockEnabled = true);
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('App 锁已启用（偏好持久化将在 Phase 1 实现）')),
+            const SnackBar(content: Text('App Lock enabled (preference persistence lands in Phase 1)')),
           );
         }
       } catch (_) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('设备不支持生物识别，App 锁暂不可用')),
+          const SnackBar(content: Text('Biometric authentication is not available on this device')),
         );
       }
     } else {
@@ -62,38 +62,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('设置')),
+      appBar: AppBar(title: const Text('Settings')),
       body: ListView(
         children: [
           SwitchListTile(
-            title: const Text('App 锁（生物识别）'),
-            subtitle: const Text('打开 App 时要求验证'),
+            title: const Text('App Lock (biometrics)'),
+            subtitle: const Text('Require verification when opening the app'),
             value: _appLockEnabled,
             onChanged: _toggleAppLock,
           ),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),
-            title: const Text('隐私说明'),
-            subtitle: const Text('数据只保存在本机，不上传服务器'),
+            title: const Text('Privacy'),
+            subtitle: const Text('Data stays on this device and is never uploaded'),
             onTap: () => showDialog<void>(
               context: context,
               builder: (context) => AlertDialog(
-                title: const Text('隐私说明'),
+                title: const Text('Privacy'),
                 content: const Text(
-                  '本 App 采用纯本地存储：你的保单信息、文件和提取结果只保存在这台设备上，'
-                  '不会上传到任何服务器，也不会出售或共享给第三方。'
-                  '\n\n未来若提供云端 AI 或备份功能，将采用逐份授权 + 端到端加密，并提前更新本说明。',
+                  'This app is local-first: your policy details, files and extraction results are stored '
+                  'only on this device, never uploaded to any server, and never sold or shared with third parties.'
+                  '\n\nIf cloud AI or backup features are added in the future, they will use per-document '
+                  'consent and end-to-end encryption, and this notice will be updated first.',
                 ),
                 actions: [
-                  TextButton(onPressed: () => Navigator.pop(context), child: const Text('知道了')),
+                  TextButton(onPressed: () => Navigator.pop(context), child: const Text('Got it')),
                 ],
               ),
             ),
           ),
           const ListTile(
             leading: Icon(Icons.info_outline),
-            title: Text('关于'),
+            title: Text('About'),
             subtitle: Text('Insurance Profile App v0.1 · MVP'),
           ),
         ],

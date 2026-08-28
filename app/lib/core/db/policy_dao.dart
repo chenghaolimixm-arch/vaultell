@@ -57,7 +57,7 @@ class PolicyDao extends DatabaseAccessor<AppDatabase> with _$PolicyDaoMixin {
     if (type == InsuranceType.health && status == 'active') {
       final existing = await activePoliciesOfType(type);
       if (existing.isNotEmpty) {
-        throw StateError('健康险只能保存一份有效保单。');
+        throw StateError('Health insurance allows only one active policy.');
       }
     }
 

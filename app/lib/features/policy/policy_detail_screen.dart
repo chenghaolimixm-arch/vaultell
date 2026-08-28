@@ -19,13 +19,13 @@ class PolicyDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('保单详情')),
+      appBar: AppBar(title: const Text('Policy details')),
       body: StreamBuilder<Policy?>(
         stream: database.policyDao.watchPolicy(policyId),
         builder: (context, snapshot) {
           final policy = snapshot.data;
           if (policy == null) {
-            return const Center(child: Text('保单不存在或已删除'));
+            return const Center(child: Text('Policy not found or deleted'));
           }
           final type = InsuranceType.fromName(policy.insuranceType);
           final insurer = InsurerCatalog.byKey(policy.insurerKey) ??
@@ -48,16 +48,16 @@ class PolicyDetailScreen extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 12),
-                      _kv('保险公司', policy.insurer),
-                      _kv('保单号', policy.policyNumber),
-                      _kv('保障类型', policy.policyType),
-                      _kv('年保费', formatMoney(policy.premiumCents)),
+                      _kv('Insurer', policy.insurer),
+                      _kv('Policy number', policy.policyNumber),
+                      _kv('Cover type', policy.policyType),
+                      _kv('Annual premium', formatMoney(policy.premiumCents)),
                       _kv('Excess', formatMoney(policy.excessCents)),
-                      _kv('保额', formatMoney(policy.sumInsuredCents)),
+                      _kv('Sum insured', formatMoney(policy.sumInsuredCents)),
                       _kv('Policy Expiry Date', formatDate(policy.endDate)),
-                      _kv('到期倒计时', expiryLabel(policy.endDate)),
-                      _kv('状态', policy.status),
-                      if (policy.notes.isNotEmpty) _kv('备注', policy.notes),
+                      _kv('Expiry countdown', expiryLabel(policy.endDate)),
+                      _kv('Status', policy.status),
+                      if (policy.notes.isNotEmpty) _kv('Notes', policy.notes),
                     ],
                   ),
                 ),
@@ -75,7 +75,7 @@ class PolicyDetailScreen extends StatelessWidget {
                     final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
                     if (!launched && context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('无法打开理赔页面，请稍后再试')),
+                        const SnackBar(content: Text('Could not open the claims page. Please try again.')),
                       );
                     }
                   },
@@ -84,7 +84,7 @@ class PolicyDetailScreen extends StatelessWidget {
                 OutlinedButton.icon(
                   onPressed: null,
                   icon: const Icon(Icons.open_in_new),
-                  label: const Text('Make a Claim（自定义保险公司未配置链接）'),
+                  label: const Text('Make a Claim (no link for custom insurer)'),
                 ),
               const SizedBox(height: 8),
               Row(
@@ -92,7 +92,7 @@ class PolicyDetailScreen extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       icon: const Icon(Icons.compare_arrows),
-                      label: const Text('报价对比'),
+                      label: const Text('Compare Quotes'),
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => ComparisonScreen(policy: policy, database: database),
@@ -104,7 +104,7 @@ class PolicyDetailScreen extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       icon: const Icon(Icons.upload_file),
-                      label: const Text('上传文件'),
+                      label: const Text('Upload File'),
                       onPressed: () async {
                         final picked = await FilePicker.pickFile(
                           type: FileType.custom,
@@ -123,7 +123,7 @@ class PolicyDetailScreen extends StatelessWidget {
                         );
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('保单文件已保存到本机')),
+                            const SnackBar(content: Text('Policy file saved on this device')),
                           );
                         }
                       },
@@ -139,7 +139,7 @@ class PolicyDetailScreen extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       icon: const Icon(Icons.edit_outlined),
-                      label: const Text('编辑'),
+                      label: const Text('Edit'),
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (_) => PolicyFormScreen(type: type, database: database, policy: policy),
@@ -151,17 +151,17 @@ class PolicyDetailScreen extends StatelessWidget {
                   Expanded(
                     child: OutlinedButton.icon(
                       icon: const Icon(Icons.delete_outline),
-                      label: const Text('删除'),
+                      label: const Text('Delete'),
                       style: OutlinedButton.styleFrom(foregroundColor: Colors.red),
                       onPressed: () async {
                         final confirmed = await showDialog<bool>(
                           context: context,
                           builder: (context) => AlertDialog(
-                            title: const Text('删除保单？'),
-                            content: const Text('将同时删除关联的报价和文件记录（本地文件需手动清理）。此操作不可撤销。'),
+                            title: const Text('Delete policy?'),
+                            content: const Text('This also removes linked quotes and file records (local files need manual cleanup). This cannot be undone.'),
                             actions: [
-                              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('取消')),
-                              FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('删除')),
+                              TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                              FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
                             ],
                           ),
                         );
@@ -213,10 +213,10 @@ class _DocumentsSection extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('文件', style: Theme.of(context).textTheme.titleMedium),
+                Text('Documents', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 if (docs.isEmpty)
-                  const Text('暂无文件。上传保单文件后在这里查看。', style: TextStyle(color: Colors.grey)),
+                  const Text('No files yet. Upload a policy file to view it here.', style: TextStyle(color: Colors.grey)),
                 for (final doc in docs)
                   ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -254,26 +254,26 @@ class _QuoteSection extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text('报价', style: Theme.of(context).textTheme.titleMedium),
+                    Text('Quotes', style: Theme.of(context).textTheme.titleMedium),
                     const Spacer(),
                     IconButton(
                       icon: const Icon(Icons.add),
-                      tooltip: '添加报价',
+                      tooltip: 'Add quote',
                       onPressed: () => _showAddQuoteDialog(context),
                     ),
                   ],
                 ),
                 if (quotes.isEmpty)
-                  const Text('暂无报价。点 + 添加（MVP 为示例数据）', style: TextStyle(color: Colors.grey)),
+                  const Text('No quotes yet. Tap + to add (example data in MVP).', style: TextStyle(color: Colors.grey)),
                 for (final quote in quotes)
                   ListTile(
                     contentPadding: EdgeInsets.zero,
                     title: Text(quote.insurer),
                     subtitle: Text(
-                      '${formatMoney(quote.premiumCents)}/年 · excess ${formatMoney(quote.excessCents)}',
+                      '${formatMoney(quote.premiumCents)}/yr · excess ${formatMoney(quote.excessCents)}',
                     ),
                     trailing: quote.isMock
-                        ? const Chip(label: Text('示例'), visualDensity: VisualDensity.compact)
+                        ? const Chip(label: Text('Example'), visualDensity: VisualDensity.compact)
                         : null,
                   ),
               ],
@@ -293,29 +293,29 @@ class _QuoteSection extends StatelessWidget {
     final saved = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('添加报价（示例数据）'),
+        title: const Text('Add quote (example data)'),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(controller: insurer, decoration: const InputDecoration(labelText: '保险公司 *')),
+              TextField(controller: insurer, decoration: const InputDecoration(labelText: 'Insurer *')),
               TextField(
                 controller: premium,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(labelText: '年保费（AUD）'),
+                decoration: const InputDecoration(labelText: 'Annual premium (AUD)'),
               ),
               TextField(
                 controller: excess,
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(labelText: 'Excess（AUD）'),
+                decoration: const InputDecoration(labelText: 'Excess (AUD)'),
               ),
-              TextField(controller: cover, decoration: const InputDecoration(labelText: '保障摘要')),
+              TextField(controller: cover, decoration: const InputDecoration(labelText: 'Cover summary')),
             ],
           ),
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('取消')),
-          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('保存')),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Save')),
         ],
       ),
     );

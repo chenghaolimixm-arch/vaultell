@@ -12,7 +12,7 @@ class ComparisonScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('报价对比')),
+      appBar: AppBar(title: const Text('Quote Comparison')),
       body: StreamBuilder<List<Quote>>(
         stream: database.policyDao.watchQuotesForPolicy(policy.id),
         builder: (context, snapshot) {
@@ -27,7 +27,7 @@ class ComparisonScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Text(
-                  '⚠️ 本页所有报价均为示例数据（mock），不代表任何保险公司的真实报价。',
+                  '⚠️ All quotes on this page are example data (mock) and do not represent real insurer quotes.',
                   style: TextStyle(fontSize: 13),
                 ),
               ),
@@ -37,7 +37,7 @@ class ComparisonScreen extends StatelessWidget {
               if (quotes.isEmpty)
                 const Padding(
                   padding: EdgeInsets.all(24),
-                  child: Text('还没有可对比的报价。回到保单详情页添加示例报价。', textAlign: TextAlign.center),
+                  child: Text('No quotes to compare yet. Add example quotes from the policy details page.', textAlign: TextAlign.center),
                 )
               else
                 for (final quote in quotes) _quoteCard(quote),
@@ -55,12 +55,12 @@ class ComparisonScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('当前保单', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Current policy', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            _row('保险公司', policy.insurer),
-            _row('年保费', formatMoney(policy.premiumCents)),
+            _row('Insurer', policy.insurer),
+            _row('Annual premium', formatMoney(policy.premiumCents)),
             _row('Excess', formatMoney(policy.excessCents)),
-            _row('保额', formatMoney(policy.sumInsuredCents)),
+            _row('Sum insured', formatMoney(policy.sumInsuredCents)),
           ],
         ),
       ),
@@ -79,14 +79,14 @@ class ComparisonScreen extends StatelessWidget {
                 Text(quote.insurer, style: const TextStyle(fontWeight: FontWeight.bold)),
                 const Spacer(),
                 if (quote.isMock)
-                  const Chip(label: Text('示例'), visualDensity: VisualDensity.compact),
+                  const Chip(label: Text('Example'), visualDensity: VisualDensity.compact),
               ],
             ),
             const SizedBox(height: 8),
-            _row('年保费', formatMoney(quote.premiumCents)),
+            _row('Annual premium', formatMoney(quote.premiumCents)),
             _row('Excess', formatMoney(quote.excessCents)),
-            _row('保额', formatMoney(quote.sumInsuredCents)),
-            if (quote.coverSummary.isNotEmpty) _row('保障摘要', quote.coverSummary),
+            _row('Sum insured', formatMoney(quote.sumInsuredCents)),
+            if (quote.coverSummary.isNotEmpty) _row('Cover summary', quote.coverSummary),
           ],
         ),
       ),

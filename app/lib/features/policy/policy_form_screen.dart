@@ -135,25 +135,25 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
       });
 
       final fields = [
-        if (data.insurer != null) '保险公司',
-        if (data.policyNumber != null) '保单号',
-        if (data.premiumCents != null) '年保费',
-        if (data.excessCents != null) 'Excess',
-        if (data.sumInsuredCents != null) '保额',
-        if (data.expiryDate != null) '到期日',
+        if (data.insurer != null) 'insurer',
+        if (data.policyNumber != null) 'policy number',
+        if (data.premiumCents != null) 'annual premium',
+        if (data.excessCents != null) 'excess',
+        if (data.sumInsuredCents != null) 'sum insured',
+        if (data.expiryDate != null) 'expiry date',
       ];
       await showDialog<void>(
         context: context,
         builder: (context) => AlertDialog(
-          title: const Text('识别结果'),
+          title: const Text('Recognition result'),
           content: Text(
             fields.isEmpty
-                ? '没有识别到可用字段，请手动填写。'
-                : '已自动填入：${fields.join('、')}。\n请核对后保存。'
+                ? 'No fields were recognised. Please fill them in manually.'
+                : 'Auto-filled: ${fields.join(', ')}.\nPlease review before saving.'
                     '${data.warning != null ? '\n\n${data.warning}' : ''}',
           ),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: const Text('好的')),
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('OK')),
           ],
         ),
       );
@@ -226,7 +226,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
   Widget build(BuildContext context) {
     final isHealth = widget.type == InsuranceType.health;
     return Scaffold(
-      appBar: AppBar(title: Text(widget.policy == null ? '添加${widget.type.label}' : '编辑保单')),
+      appBar: AppBar(title: Text(widget.policy == null ? 'Add ${widget.type.label}' : 'Edit policy')),
       body: Form(
         key: _formKey,
         child: ListView(
@@ -241,34 +241,34 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.upload_file),
-              label: Text(_importing ? '识别中…' : '从保单文件自动填写（本机识别）'),
+              label: Text(_importing ? 'Recognising…' : 'Import from policy file (on-device)'),
             ),
             const SizedBox(height: 16),
             if (!isHealth)
               TextFormField(
                 controller: _assetName,
                 decoration: InputDecoration(
-                  labelText: '关联${widget.type.subjectType == 'car' ? '车辆' : widget.type.subjectType == 'pet' ? '宠物' : '房产'}（如：2019 Mazda 3）',
-                  hintText: '可选',
+                  labelText: 'Linked ${widget.type.subjectType == 'car' ? 'vehicle' : widget.type.subjectType == 'pet' ? 'pet' : 'property'} (e.g. 2019 Mazda 3)',
+                  hintText: 'Optional',
                 ),
               ),
             DropdownButtonFormField<String>(
               initialValue: _insurerKey,
-              decoration: const InputDecoration(labelText: '选择保险公司 *'),
-              hint: const Text('从列表选择，或选「其他」'),
+              decoration: const InputDecoration(labelText: 'Select insurer *'),
+              hint: const Text('Pick from the list, or choose Other'),
               items: [
                 for (final entry in InsurerCatalog.all)
                   DropdownMenuItem(value: entry.key, child: Text(entry.name)),
                 const DropdownMenuItem(
                   value: InsurerCatalog.customOptionKey,
-                  child: Text('其他 / 自定义…'),
+                  child: Text('Other / Custom…'),
                 ),
               ],
               onChanged: (v) => setState(() => _insurerKey = v),
               validator: (v) {
-                if (v == null) return '请选择保险公司';
+                if (v == null) return 'Please select an insurer';
                 if (v == InsurerCatalog.customOptionKey && _customInsurer.text.trim().isEmpty) {
-                  return '请输入保险公司名称';
+                  return 'Please enter the insurer name';
                 }
                 return null;
               },
@@ -276,22 +276,22 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
             if (_insurerKey == InsurerCatalog.customOptionKey)
               TextFormField(
                 controller: _customInsurer,
-                decoration: const InputDecoration(labelText: '自定义保险公司名称 *'),
+                decoration: const InputDecoration(labelText: 'Custom insurer name *'),
                 validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? '请填写保险公司名称' : null,
+                    (v == null || v.trim().isEmpty) ? 'Please enter the insurer name' : null,
               ),
             TextFormField(
               controller: _policyNumber,
-              decoration: const InputDecoration(labelText: '保单号'),
+              decoration: const InputDecoration(labelText: 'Policy number'),
             ),
             TextFormField(
               controller: _policyType,
-              decoration: const InputDecoration(labelText: '保障类型（如 Comprehensive）'),
+              decoration: const InputDecoration(labelText: 'Cover type (e.g. Comprehensive)'),
             ),
             TextFormField(
               controller: _premium,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: '年保费（AUD）'),
+              decoration: const InputDecoration(labelText: 'Annual premium (AUD)'),
             ),
             TextFormField(
               controller: _excess,
@@ -301,35 +301,35 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
             TextFormField(
               controller: _sumInsured,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: '保额（AUD）'),
+              decoration: const InputDecoration(labelText: 'Sum insured (AUD)'),
             ),
             const SizedBox(height: 12),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('Policy Expiry Date（到期日）'),
+              title: const Text('Policy Expiry Date'),
               subtitle: Text(formatDate(_expiryDate)),
               trailing: const Icon(Icons.calendar_month),
               onTap: _pickDate,
             ),
             DropdownButtonFormField<String>(
               initialValue: _status,
-              decoration: const InputDecoration(labelText: '状态'),
+              decoration: const InputDecoration(labelText: 'Status'),
               items: const [
-                DropdownMenuItem(value: 'active', child: Text('有效')),
-                DropdownMenuItem(value: 'cancelled', child: Text('已取消')),
-                DropdownMenuItem(value: 'expired', child: Text('已过期')),
+                DropdownMenuItem(value: 'active', child: Text('Active')),
+                DropdownMenuItem(value: 'cancelled', child: Text('Cancelled')),
+                DropdownMenuItem(value: 'expired', child: Text('Expired')),
               ],
               onChanged: (v) => setState(() => _status = v ?? 'active'),
             ),
             TextFormField(
               controller: _notes,
-              decoration: const InputDecoration(labelText: '备注'),
+              decoration: const InputDecoration(labelText: 'Notes'),
               maxLines: 2,
             ),
             const SizedBox(height: 24),
             FilledButton(
               onPressed: _saving ? null : _save,
-              child: Text(_saving ? '保存中…' : '保存'),
+              child: Text(_saving ? 'Saving…' : 'Save'),
             ),
           ],
         ),

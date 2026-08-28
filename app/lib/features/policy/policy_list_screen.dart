@@ -27,7 +27,7 @@ class PolicyListScreen extends StatelessWidget {
                 children: [
                   Icon(type.icon, size: 56, color: type.color.withValues(alpha: 0.4)),
                   const SizedBox(height: 12),
-                  const Text('还没有保单，点右下角添加'),
+                  const Text('No policies yet. Tap + to add one.'),
                 ],
               ),
             );
@@ -46,11 +46,11 @@ class PolicyListScreen extends StatelessWidget {
                       style: TextStyle(color: type.color, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  title: Text(policy.insurer.isEmpty ? '未命名保单' : policy.insurer),
+                  title: Text(policy.insurer.isEmpty ? 'Unnamed policy' : policy.insurer),
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${formatMoney(policy.premiumCents)}/年 · 保单号 ${policy.policyNumber.isEmpty ? '—' : policy.policyNumber}'),
+                      Text('${formatMoney(policy.premiumCents)}/yr · Policy ${policy.policyNumber.isEmpty ? '—' : policy.policyNumber}'),
                       Text(expiryLabel(policy.endDate), style: const TextStyle(fontSize: 12)),
                     ],
                   ),
@@ -79,7 +79,7 @@ class PolicyListScreen extends StatelessWidget {
             if (active.isNotEmpty) {
               if (!context.mounted) return;
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('健康险只能保存一份有效保单')),
+                const SnackBar(content: Text('Health insurance allows only one active policy')),
               );
               return;
             }
@@ -92,7 +92,7 @@ class PolicyListScreen extends StatelessWidget {
           );
         },
         icon: const Icon(Icons.add),
-        label: const Text('添加保单'),
+        label: const Text('Add Policy'),
       ),
     );
   }

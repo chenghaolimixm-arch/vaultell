@@ -6,7 +6,7 @@
         </intent>
     </queries>
     <application
-        android:label="insurance_profile_app"
+        android:label="Insurance Profile"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

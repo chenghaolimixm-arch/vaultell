@@ -7,7 +7,7 @@ String formatMoney(int cents) {
 
 String formatDate(DateTime? date) {
   if (date == null) return '—';
-  return DateFormat('dd MMM yyyy').format(date);
+  return DateFormat('dd MMM yyyy', 'en_US').format(date);
 }
 
 /// Whole days from today until [date]; negative when past.
@@ -21,10 +21,10 @@ int? daysUntil(DateTime? date) {
 
 String expiryLabel(DateTime? date) {
   final days = daysUntil(date);
-  if (days == null) return '未设置到期日';
-  if (days < 0) return '已于 ${formatDate(date)} 到期';
-  if (days == 0) return '今天到期';
-  return '还有 $days 天（${formatDate(date)}）';
+  if (days == null) return 'No expiry date set';
+  if (days < 0) return 'Expired on ${formatDate(date)}';
+  if (days == 0) return 'Expires today';
+  return '$days days left (${formatDate(date)})';
 }
 
 int parseDollarsToCents(String input) {

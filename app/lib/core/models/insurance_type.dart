@@ -5,16 +5,15 @@ import 'package:flutter/material.dart';
 /// Health insurance is limited to a single active policy per user; all other
 /// types support multiple policies.
 enum InsuranceType {
-  car('Car Insurance', '车险', Icons.directions_car, Color(0xFF1565C0), 'car'),
-  home('Home Insurance', '房屋险', Icons.home, Color(0xFF2E7D32), 'property'),
-  landlord('Landlord Insurance', '房东险', Icons.apartment, Color(0xFF6A1B9A), 'property'),
-  health('Health Insurance', '健康险', Icons.favorite, Color(0xFFC62828), null),
-  pet('Pet Insurance', '宠物险', Icons.pets, Color(0xFFEF6C00), 'pet');
+  car('Car Insurance', Icons.directions_car, Color(0xFF1565C0), 'car'),
+  home('Home Insurance', Icons.home, Color(0xFF2E7D32), 'property'),
+  landlord('Landlord Insurance', Icons.apartment, Color(0xFF6A1B9A), 'property'),
+  health('Health Insurance', Icons.favorite, Color(0xFFC62828), null),
+  pet('Pet Insurance', Icons.pets, Color(0xFFEF6C00), 'pet');
 
-  const InsuranceType(this.label, this.labelZh, this.icon, this.color, this.subjectType);
+  const InsuranceType(this.label, this.icon, this.color, this.subjectType);
 
   final String label;
-  final String labelZh;
   final IconData icon;
   final Color color;
 

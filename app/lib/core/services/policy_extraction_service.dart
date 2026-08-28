@@ -173,7 +173,7 @@ class LocalPolicyExtractionService {
         if (text.trim().isEmpty) {
           return ExtractedPolicyData(
             sourceFileName: fileName,
-            warning: '这是扫描版 PDF，暂时无法自动识别，请手动填写。',
+            warning: 'This appears to be a scanned PDF, which is not supported yet. Please enter the details manually.',
           );
         }
         return PolicyDataExtractor.fromText(text, sourceFileName: fileName);
@@ -188,7 +188,7 @@ class LocalPolicyExtractionService {
     } catch (e) {
       return ExtractedPolicyData(
         sourceFileName: fileName,
-        warning: '识别失败（$e）。请手动填写，或改用清晰的照片/PDF。',
+        warning: 'Recognition failed ($e). Please enter the details manually or use a clearer photo/PDF.',
       );
     }
   }

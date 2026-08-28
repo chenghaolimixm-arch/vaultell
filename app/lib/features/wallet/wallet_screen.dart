@@ -19,7 +19,7 @@ class WalletScreen extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            tooltip: '设置',
+            tooltip: 'Settings',
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (_) => SettingsScreen(database: database)),
@@ -41,7 +41,7 @@ class WalletScreen extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 24),
                 child: Text(
-                  '所有数据仅保存在本机，不会上传到任何服务器。',
+                  'All data stays on this device. Nothing is uploaded to any server.',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 12, color: Colors.grey),
                 ),
@@ -82,17 +82,21 @@ class _TypeCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 2),
-            Text('${active.length} 份有效保单${active.isNotEmpty ? '' : '（暂无）'}'),
+            Text(
+              active.isEmpty
+                  ? 'No active policies'
+                  : '${active.length} active ${active.length == 1 ? 'policy' : 'policies'}',
+            ),
             if (nextExpiry != null)
               Text(
-                '下一到期：${expiryLabel(nextExpiry)}',
+                'Next expiry: ${expiryLabel(nextExpiry)}',
                 style: const TextStyle(fontSize: 12, color: Colors.orange),
               ),
           ],
         ),
         trailing: IconButton(
           icon: const Icon(Icons.add_circle_outline),
-          tooltip: '添加${type.label}',
+          tooltip: 'Add ${type.label}',
           onPressed: () => Navigator.of(context).push(
             MaterialPageRoute(
               builder: (_) => PolicyListScreen(type: type, database: database),
