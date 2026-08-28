@@ -31,7 +31,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
   late final TextEditingController _assetName;
   late final TextEditingController _customInsurer;
 
-  DateTime? _renewalDate;
+  DateTime? _expiryDate;
   String _status = 'active';
   String? _insurerKey;
   bool _saving = false;
@@ -51,7 +51,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
     _notes = TextEditingController(text: p?.notes ?? '');
     _assetName = TextEditingController();
     _customInsurer = TextEditingController();
-    _renewalDate = p?.renewalDate;
+    _expiryDate = p?.endDate;
     _status = p?.status ?? 'active';
     if (p != null) {
       final entry = InsurerCatalog.byKey(p.insurerKey) ?? InsurerCatalog.byName(p.insurer);
@@ -86,11 +86,11 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: _renewalDate ?? DateTime.now().add(const Duration(days: 90)),
+      initialDate: _expiryDate ?? DateTime.now().add(const Duration(days: 90)),
       firstDate: DateTime.now().subtract(const Duration(days: 365)),
       lastDate: DateTime.now().add(const Duration(days: 365 * 3)),
     );
-    if (picked != null) setState(() => _renewalDate = picked);
+    if (picked != null) setState(() => _expiryDate = picked);
   }
 
   Future<void> _importFromFile() async {
@@ -131,7 +131,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
         if (data.sumInsuredCents != null) {
           _sumInsured.text = (data.sumInsuredCents! / 100).toStringAsFixed(2);
         }
-        if (data.renewalDate != null) _renewalDate = data.renewalDate;
+        if (data.expiryDate != null) _expiryDate = data.expiryDate;
       });
 
       final fields = [
@@ -140,7 +140,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
         if (data.premiumCents != null) '年保费',
         if (data.excessCents != null) 'Excess',
         if (data.sumInsuredCents != null) '保额',
-        if (data.renewalDate != null) '续保日期',
+        if (data.expiryDate != null) '到期日',
       ];
       await showDialog<void>(
         context: context,
@@ -177,7 +177,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
           premiumCents: parseDollarsToCents(_premium.text),
           excessCents: parseDollarsToCents(_excess.text),
           sumInsuredCents: parseDollarsToCents(_sumInsured.text),
-          renewalDate: _renewalDate,
+          endDate: _expiryDate,
           status: _status,
           notes: _notes.text.trim(),
           assetName: widget.type.subjectType == null ? null : _assetName.text,
@@ -194,7 +194,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
           premiumCents: parseDollarsToCents(_premium.text),
           excessCents: parseDollarsToCents(_excess.text),
           sumInsuredCents: parseDollarsToCents(_sumInsured.text),
-          renewalDate: _renewalDate,
+          endDate: _expiryDate,
           status: _status,
           notes: _notes.text.trim(),
         );
@@ -306,8 +306,8 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
             const SizedBox(height: 12),
             ListTile(
               contentPadding: EdgeInsets.zero,
-              title: const Text('续保日期'),
-              subtitle: Text(formatDate(_renewalDate)),
+              title: const Text('Policy Expiry Date（到期日）'),
+              subtitle: Text(formatDate(_expiryDate)),
               trailing: const Icon(Icons.calendar_month),
               onTap: _pickDate,
             ),

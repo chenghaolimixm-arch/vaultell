@@ -54,8 +54,8 @@ class PolicyDetailScreen extends StatelessWidget {
                       _kv('年保费', formatMoney(policy.premiumCents)),
                       _kv('Excess', formatMoney(policy.excessCents)),
                       _kv('保额', formatMoney(policy.sumInsuredCents)),
-                      _kv('续保日期', formatDate(policy.renewalDate)),
-                      _kv('续保倒计时', renewalLabel(policy.renewalDate)),
+                      _kv('Policy Expiry Date', formatDate(policy.endDate)),
+                      _kv('到期倒计时', expiryLabel(policy.endDate)),
                       _kv('状态', policy.status),
                       if (policy.notes.isNotEmpty) _kv('备注', policy.notes),
                     ],
@@ -216,7 +216,7 @@ class _DocumentsSection extends StatelessWidget {
                 Text('文件', style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: 8),
                 if (docs.isEmpty)
-                  const Text('暂无文件。上传续保单后在这里查看。', style: TextStyle(color: Colors.grey)),
+                  const Text('暂无文件。上传保单文件后在这里查看。', style: TextStyle(color: Colors.grey)),
                 for (final doc in docs)
                   ListTile(
                     contentPadding: EdgeInsets.zero,

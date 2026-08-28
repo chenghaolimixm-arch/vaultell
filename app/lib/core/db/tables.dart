@@ -32,9 +32,9 @@ class Policies extends Table {
   IntColumn get premiumCents => integer().withDefault(const Constant(0))();
   IntColumn get excessCents => integer().withDefault(const Constant(0))();
   IntColumn get sumInsuredCents => integer().withDefault(const Constant(0))();
-  DateTimeColumn get renewalDate => dateTime().nullable()();
   DateTimeColumn get startDate => dateTime().nullable()();
-  DateTimeColumn get endDate => dateTime().nullable()();
+  DateTimeColumn get endDate => dateTime().nullable()(); // policy expiry date
+  DateTimeColumn get renewalDate => dateTime().nullable()(); // legacy, unused by UI
   TextColumn get status => text().withDefault(const Constant('active'))(); // active | cancelled | expired
   TextColumn get notes => text().withDefault(const Constant(''))();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();

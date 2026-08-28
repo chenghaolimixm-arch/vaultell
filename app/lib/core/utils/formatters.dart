@@ -19,9 +19,9 @@ int? daysUntil(DateTime? date) {
   return target.difference(today).inDays;
 }
 
-String renewalLabel(DateTime? date) {
+String expiryLabel(DateTime? date) {
   final days = daysUntil(date);
-  if (days == null) return '未设置续保日期';
+  if (days == null) return '未设置到期日';
   if (days < 0) return '已于 ${formatDate(date)} 到期';
   if (days == 0) return '今天到期';
   return '还有 $days 天（${formatDate(date)}）';

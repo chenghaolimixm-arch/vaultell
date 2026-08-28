@@ -59,7 +59,8 @@ policies
   insurer, policy_number, policy_type,
   insurer_key (nullable，指向保险公司目录，null 表示自定义),
   premium_cents, excess_cents, sum_insured_cents,
-  renewal_date, start_date, end_date,
+  start_date, end_date (policy expiry date),
+  renewal_date (legacy，界面已不再使用),
   status (active/cancelled/expired), notes,
   created_at, updated_at
 

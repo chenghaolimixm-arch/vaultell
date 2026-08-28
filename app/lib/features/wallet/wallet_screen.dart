@@ -65,10 +65,10 @@ class _TypeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ofType = policies.where((p) => p.insuranceType == type.name).toList();
     final active = ofType.where((p) => p.status == 'active').toList();
-    final renewalDates = active.map((p) => p.renewalDate).whereType<DateTime>().toList();
-    final nextRenewal = renewalDates.isEmpty
+    final expiryDates = active.map((p) => p.endDate).whereType<DateTime>().toList();
+    final nextExpiry = expiryDates.isEmpty
         ? null
-        : renewalDates.reduce((a, b) => a.isBefore(b) ? a : b);
+        : expiryDates.reduce((a, b) => a.isBefore(b) ? a : b);
 
     return Card(
       child: ListTile(
@@ -83,9 +83,9 @@ class _TypeCard extends StatelessWidget {
           children: [
             const SizedBox(height: 2),
             Text('${active.length} 份有效保单${active.isNotEmpty ? '' : '（暂无）'}'),
-            if (nextRenewal != null)
+            if (nextExpiry != null)
               Text(
-                '下一续保：${renewalLabel(nextRenewal)}',
+                '下一到期：${expiryLabel(nextExpiry)}',
                 style: const TextStyle(fontSize: 12, color: Colors.orange),
               ),
           ],

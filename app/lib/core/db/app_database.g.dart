@@ -678,12 +678,6 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultValue: const Constant(0));
-  static const VerificationMeta _renewalDateMeta =
-      const VerificationMeta('renewalDate');
-  @override
-  late final GeneratedColumn<DateTime> renewalDate = GeneratedColumn<DateTime>(
-      'renewal_date', aliasedName, true,
-      type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _startDateMeta =
       const VerificationMeta('startDate');
   @override
@@ -695,6 +689,12 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
   @override
   late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
       'end_date', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _renewalDateMeta =
+      const VerificationMeta('renewalDate');
+  @override
+  late final GeneratedColumn<DateTime> renewalDate = GeneratedColumn<DateTime>(
+      'renewal_date', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
   static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
@@ -739,9 +739,9 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
         premiumCents,
         excessCents,
         sumInsuredCents,
-        renewalDate,
         startDate,
         endDate,
+        renewalDate,
         status,
         notes,
         createdAt,
@@ -820,12 +820,6 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
           sumInsuredCents.isAcceptableOrUnknown(
               data['sum_insured_cents']!, _sumInsuredCentsMeta));
     }
-    if (data.containsKey('renewal_date')) {
-      context.handle(
-          _renewalDateMeta,
-          renewalDate.isAcceptableOrUnknown(
-              data['renewal_date']!, _renewalDateMeta));
-    }
     if (data.containsKey('start_date')) {
       context.handle(_startDateMeta,
           startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
@@ -833,6 +827,12 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
     if (data.containsKey('end_date')) {
       context.handle(_endDateMeta,
           endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    }
+    if (data.containsKey('renewal_date')) {
+      context.handle(
+          _renewalDateMeta,
+          renewalDate.isAcceptableOrUnknown(
+              data['renewal_date']!, _renewalDateMeta));
     }
     if (data.containsKey('status')) {
       context.handle(_statusMeta,
@@ -881,12 +881,12 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
           .read(DriftSqlType.int, data['${effectivePrefix}excess_cents'])!,
       sumInsuredCents: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}sum_insured_cents'])!,
-      renewalDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}renewal_date']),
       startDate: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date']),
       endDate: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date']),
+      renewalDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}renewal_date']),
       status: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
       notes: attachedDatabase.typeMapping
@@ -916,9 +916,9 @@ class Policy extends DataClass implements Insertable<Policy> {
   final int premiumCents;
   final int excessCents;
   final int sumInsuredCents;
-  final DateTime? renewalDate;
   final DateTime? startDate;
   final DateTime? endDate;
+  final DateTime? renewalDate;
   final String status;
   final String notes;
   final DateTime createdAt;
@@ -935,9 +935,9 @@ class Policy extends DataClass implements Insertable<Policy> {
       required this.premiumCents,
       required this.excessCents,
       required this.sumInsuredCents,
-      this.renewalDate,
       this.startDate,
       this.endDate,
+      this.renewalDate,
       required this.status,
       required this.notes,
       required this.createdAt,
@@ -960,14 +960,14 @@ class Policy extends DataClass implements Insertable<Policy> {
     map['premium_cents'] = Variable<int>(premiumCents);
     map['excess_cents'] = Variable<int>(excessCents);
     map['sum_insured_cents'] = Variable<int>(sumInsuredCents);
-    if (!nullToAbsent || renewalDate != null) {
-      map['renewal_date'] = Variable<DateTime>(renewalDate);
-    }
     if (!nullToAbsent || startDate != null) {
       map['start_date'] = Variable<DateTime>(startDate);
     }
     if (!nullToAbsent || endDate != null) {
       map['end_date'] = Variable<DateTime>(endDate);
+    }
+    if (!nullToAbsent || renewalDate != null) {
+      map['renewal_date'] = Variable<DateTime>(renewalDate);
     }
     map['status'] = Variable<String>(status);
     map['notes'] = Variable<String>(notes);
@@ -993,15 +993,15 @@ class Policy extends DataClass implements Insertable<Policy> {
       premiumCents: Value(premiumCents),
       excessCents: Value(excessCents),
       sumInsuredCents: Value(sumInsuredCents),
-      renewalDate: renewalDate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(renewalDate),
       startDate: startDate == null && nullToAbsent
           ? const Value.absent()
           : Value(startDate),
       endDate: endDate == null && nullToAbsent
           ? const Value.absent()
           : Value(endDate),
+      renewalDate: renewalDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(renewalDate),
       status: Value(status),
       notes: Value(notes),
       createdAt: Value(createdAt),
@@ -1024,9 +1024,9 @@ class Policy extends DataClass implements Insertable<Policy> {
       premiumCents: serializer.fromJson<int>(json['premiumCents']),
       excessCents: serializer.fromJson<int>(json['excessCents']),
       sumInsuredCents: serializer.fromJson<int>(json['sumInsuredCents']),
-      renewalDate: serializer.fromJson<DateTime?>(json['renewalDate']),
       startDate: serializer.fromJson<DateTime?>(json['startDate']),
       endDate: serializer.fromJson<DateTime?>(json['endDate']),
+      renewalDate: serializer.fromJson<DateTime?>(json['renewalDate']),
       status: serializer.fromJson<String>(json['status']),
       notes: serializer.fromJson<String>(json['notes']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -1048,9 +1048,9 @@ class Policy extends DataClass implements Insertable<Policy> {
       'premiumCents': serializer.toJson<int>(premiumCents),
       'excessCents': serializer.toJson<int>(excessCents),
       'sumInsuredCents': serializer.toJson<int>(sumInsuredCents),
-      'renewalDate': serializer.toJson<DateTime?>(renewalDate),
       'startDate': serializer.toJson<DateTime?>(startDate),
       'endDate': serializer.toJson<DateTime?>(endDate),
+      'renewalDate': serializer.toJson<DateTime?>(renewalDate),
       'status': serializer.toJson<String>(status),
       'notes': serializer.toJson<String>(notes),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -1070,9 +1070,9 @@ class Policy extends DataClass implements Insertable<Policy> {
           int? premiumCents,
           int? excessCents,
           int? sumInsuredCents,
-          Value<DateTime?> renewalDate = const Value.absent(),
           Value<DateTime?> startDate = const Value.absent(),
           Value<DateTime?> endDate = const Value.absent(),
+          Value<DateTime?> renewalDate = const Value.absent(),
           String? status,
           String? notes,
           DateTime? createdAt,
@@ -1089,9 +1089,9 @@ class Policy extends DataClass implements Insertable<Policy> {
         premiumCents: premiumCents ?? this.premiumCents,
         excessCents: excessCents ?? this.excessCents,
         sumInsuredCents: sumInsuredCents ?? this.sumInsuredCents,
-        renewalDate: renewalDate.present ? renewalDate.value : this.renewalDate,
         startDate: startDate.present ? startDate.value : this.startDate,
         endDate: endDate.present ? endDate.value : this.endDate,
+        renewalDate: renewalDate.present ? renewalDate.value : this.renewalDate,
         status: status ?? this.status,
         notes: notes ?? this.notes,
         createdAt: createdAt ?? this.createdAt,
@@ -1121,10 +1121,10 @@ class Policy extends DataClass implements Insertable<Policy> {
       sumInsuredCents: data.sumInsuredCents.present
           ? data.sumInsuredCents.value
           : this.sumInsuredCents,
-      renewalDate:
-          data.renewalDate.present ? data.renewalDate.value : this.renewalDate,
       startDate: data.startDate.present ? data.startDate.value : this.startDate,
       endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      renewalDate:
+          data.renewalDate.present ? data.renewalDate.value : this.renewalDate,
       status: data.status.present ? data.status.value : this.status,
       notes: data.notes.present ? data.notes.value : this.notes,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
@@ -1146,9 +1146,9 @@ class Policy extends DataClass implements Insertable<Policy> {
           ..write('premiumCents: $premiumCents, ')
           ..write('excessCents: $excessCents, ')
           ..write('sumInsuredCents: $sumInsuredCents, ')
-          ..write('renewalDate: $renewalDate, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
+          ..write('renewalDate: $renewalDate, ')
           ..write('status: $status, ')
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt, ')
@@ -1170,9 +1170,9 @@ class Policy extends DataClass implements Insertable<Policy> {
       premiumCents,
       excessCents,
       sumInsuredCents,
-      renewalDate,
       startDate,
       endDate,
+      renewalDate,
       status,
       notes,
       createdAt,
@@ -1192,9 +1192,9 @@ class Policy extends DataClass implements Insertable<Policy> {
           other.premiumCents == this.premiumCents &&
           other.excessCents == this.excessCents &&
           other.sumInsuredCents == this.sumInsuredCents &&
-          other.renewalDate == this.renewalDate &&
           other.startDate == this.startDate &&
           other.endDate == this.endDate &&
+          other.renewalDate == this.renewalDate &&
           other.status == this.status &&
           other.notes == this.notes &&
           other.createdAt == this.createdAt &&
@@ -1213,9 +1213,9 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
   final Value<int> premiumCents;
   final Value<int> excessCents;
   final Value<int> sumInsuredCents;
-  final Value<DateTime?> renewalDate;
   final Value<DateTime?> startDate;
   final Value<DateTime?> endDate;
+  final Value<DateTime?> renewalDate;
   final Value<String> status;
   final Value<String> notes;
   final Value<DateTime> createdAt;
@@ -1232,9 +1232,9 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     this.premiumCents = const Value.absent(),
     this.excessCents = const Value.absent(),
     this.sumInsuredCents = const Value.absent(),
-    this.renewalDate = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
+    this.renewalDate = const Value.absent(),
     this.status = const Value.absent(),
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -1252,9 +1252,9 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     this.premiumCents = const Value.absent(),
     this.excessCents = const Value.absent(),
     this.sumInsuredCents = const Value.absent(),
-    this.renewalDate = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
+    this.renewalDate = const Value.absent(),
     this.status = const Value.absent(),
     this.notes = const Value.absent(),
     this.createdAt = const Value.absent(),
@@ -1274,9 +1274,9 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     Expression<int>? premiumCents,
     Expression<int>? excessCents,
     Expression<int>? sumInsuredCents,
-    Expression<DateTime>? renewalDate,
     Expression<DateTime>? startDate,
     Expression<DateTime>? endDate,
+    Expression<DateTime>? renewalDate,
     Expression<String>? status,
     Expression<String>? notes,
     Expression<DateTime>? createdAt,
@@ -1294,9 +1294,9 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
       if (premiumCents != null) 'premium_cents': premiumCents,
       if (excessCents != null) 'excess_cents': excessCents,
       if (sumInsuredCents != null) 'sum_insured_cents': sumInsuredCents,
-      if (renewalDate != null) 'renewal_date': renewalDate,
       if (startDate != null) 'start_date': startDate,
       if (endDate != null) 'end_date': endDate,
+      if (renewalDate != null) 'renewal_date': renewalDate,
       if (status != null) 'status': status,
       if (notes != null) 'notes': notes,
       if (createdAt != null) 'created_at': createdAt,
@@ -1316,9 +1316,9 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
       Value<int>? premiumCents,
       Value<int>? excessCents,
       Value<int>? sumInsuredCents,
-      Value<DateTime?>? renewalDate,
       Value<DateTime?>? startDate,
       Value<DateTime?>? endDate,
+      Value<DateTime?>? renewalDate,
       Value<String>? status,
       Value<String>? notes,
       Value<DateTime>? createdAt,
@@ -1335,9 +1335,9 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
       premiumCents: premiumCents ?? this.premiumCents,
       excessCents: excessCents ?? this.excessCents,
       sumInsuredCents: sumInsuredCents ?? this.sumInsuredCents,
-      renewalDate: renewalDate ?? this.renewalDate,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
+      renewalDate: renewalDate ?? this.renewalDate,
       status: status ?? this.status,
       notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
@@ -1381,14 +1381,14 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     if (sumInsuredCents.present) {
       map['sum_insured_cents'] = Variable<int>(sumInsuredCents.value);
     }
-    if (renewalDate.present) {
-      map['renewal_date'] = Variable<DateTime>(renewalDate.value);
-    }
     if (startDate.present) {
       map['start_date'] = Variable<DateTime>(startDate.value);
     }
     if (endDate.present) {
       map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (renewalDate.present) {
+      map['renewal_date'] = Variable<DateTime>(renewalDate.value);
     }
     if (status.present) {
       map['status'] = Variable<String>(status.value);
@@ -1419,9 +1419,9 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
           ..write('premiumCents: $premiumCents, ')
           ..write('excessCents: $excessCents, ')
           ..write('sumInsuredCents: $sumInsuredCents, ')
-          ..write('renewalDate: $renewalDate, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
+          ..write('renewalDate: $renewalDate, ')
           ..write('status: $status, ')
           ..write('notes: $notes, ')
           ..write('createdAt: $createdAt, ')
@@ -2666,9 +2666,9 @@ typedef $$PoliciesTableCreateCompanionBuilder = PoliciesCompanion Function({
   Value<int> premiumCents,
   Value<int> excessCents,
   Value<int> sumInsuredCents,
-  Value<DateTime?> renewalDate,
   Value<DateTime?> startDate,
   Value<DateTime?> endDate,
+  Value<DateTime?> renewalDate,
   Value<String> status,
   Value<String> notes,
   Value<DateTime> createdAt,
@@ -2686,9 +2686,9 @@ typedef $$PoliciesTableUpdateCompanionBuilder = PoliciesCompanion Function({
   Value<int> premiumCents,
   Value<int> excessCents,
   Value<int> sumInsuredCents,
-  Value<DateTime?> renewalDate,
   Value<DateTime?> startDate,
   Value<DateTime?> endDate,
+  Value<DateTime?> renewalDate,
   Value<String> status,
   Value<String> notes,
   Value<DateTime> createdAt,
@@ -2738,14 +2738,14 @@ class $$PoliciesTableFilterComposer
       column: $table.sumInsuredCents,
       builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<DateTime> get renewalDate => $composableBuilder(
-      column: $table.renewalDate, builder: (column) => ColumnFilters(column));
-
   ColumnFilters<DateTime> get startDate => $composableBuilder(
       column: $table.startDate, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get endDate => $composableBuilder(
       column: $table.endDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get renewalDate => $composableBuilder(
+      column: $table.renewalDate, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get status => $composableBuilder(
       column: $table.status, builder: (column) => ColumnFilters(column));
@@ -2806,14 +2806,14 @@ class $$PoliciesTableOrderingComposer
       column: $table.sumInsuredCents,
       builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<DateTime> get renewalDate => $composableBuilder(
-      column: $table.renewalDate, builder: (column) => ColumnOrderings(column));
-
   ColumnOrderings<DateTime> get startDate => $composableBuilder(
       column: $table.startDate, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<DateTime> get endDate => $composableBuilder(
       column: $table.endDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get renewalDate => $composableBuilder(
+      column: $table.renewalDate, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get status => $composableBuilder(
       column: $table.status, builder: (column) => ColumnOrderings(column));
@@ -2870,14 +2870,14 @@ class $$PoliciesTableAnnotationComposer
   GeneratedColumn<int> get sumInsuredCents => $composableBuilder(
       column: $table.sumInsuredCents, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get renewalDate => $composableBuilder(
-      column: $table.renewalDate, builder: (column) => column);
-
   GeneratedColumn<DateTime> get startDate =>
       $composableBuilder(column: $table.startDate, builder: (column) => column);
 
   GeneratedColumn<DateTime> get endDate =>
       $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get renewalDate => $composableBuilder(
+      column: $table.renewalDate, builder: (column) => column);
 
   GeneratedColumn<String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
@@ -2926,9 +2926,9 @@ class $$PoliciesTableTableManager extends RootTableManager<
             Value<int> premiumCents = const Value.absent(),
             Value<int> excessCents = const Value.absent(),
             Value<int> sumInsuredCents = const Value.absent(),
-            Value<DateTime?> renewalDate = const Value.absent(),
             Value<DateTime?> startDate = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
+            Value<DateTime?> renewalDate = const Value.absent(),
             Value<String> status = const Value.absent(),
             Value<String> notes = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
@@ -2946,9 +2946,9 @@ class $$PoliciesTableTableManager extends RootTableManager<
             premiumCents: premiumCents,
             excessCents: excessCents,
             sumInsuredCents: sumInsuredCents,
-            renewalDate: renewalDate,
             startDate: startDate,
             endDate: endDate,
+            renewalDate: renewalDate,
             status: status,
             notes: notes,
             createdAt: createdAt,
@@ -2966,9 +2966,9 @@ class $$PoliciesTableTableManager extends RootTableManager<
             Value<int> premiumCents = const Value.absent(),
             Value<int> excessCents = const Value.absent(),
             Value<int> sumInsuredCents = const Value.absent(),
-            Value<DateTime?> renewalDate = const Value.absent(),
             Value<DateTime?> startDate = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
+            Value<DateTime?> renewalDate = const Value.absent(),
             Value<String> status = const Value.absent(),
             Value<String> notes = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
@@ -2986,9 +2986,9 @@ class $$PoliciesTableTableManager extends RootTableManager<
             premiumCents: premiumCents,
             excessCents: excessCents,
             sumInsuredCents: sumInsuredCents,
-            renewalDate: renewalDate,
             startDate: startDate,
             endDate: endDate,
+            renewalDate: renewalDate,
             status: status,
             notes: notes,
             createdAt: createdAt,

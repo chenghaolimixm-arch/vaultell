@@ -13,7 +13,7 @@ class ExtractedPolicyData {
     this.premiumCents,
     this.excessCents,
     this.sumInsuredCents,
-    this.renewalDate,
+    this.expiryDate,
     required this.sourceFileName,
     this.warning,
   });
@@ -24,7 +24,7 @@ class ExtractedPolicyData {
   final int? premiumCents;
   final int? excessCents;
   final int? sumInsuredCents;
-  final DateTime? renewalDate;
+  final DateTime? expiryDate;
   final String sourceFileName;
   final String? warning;
 
@@ -34,7 +34,7 @@ class ExtractedPolicyData {
       premiumCents != null ||
       excessCents != null ||
       sumInsuredCents != null ||
-      renewalDate != null;
+      expiryDate != null;
 }
 
 /// Pure-Dart rules that turn OCR/extracted text into structured policy fields.
@@ -84,7 +84,7 @@ class PolicyDataExtractor {
     caseSensitive: false,
   );
 
-  static final RegExp _renewalDateRe = RegExp(
+  static final RegExp _expiryDateRe = RegExp(
     r'(?:renewal|renewal\s+date|expiry|expires|valid\s+until|policy\s+period)[^.\n]{0,40}?'
     r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}'
     r'|\d{1,2}\/\d{1,2}\/\d{2,4}'
@@ -102,7 +102,7 @@ class PolicyDataExtractor {
       premiumCents: _money(_premiumRe, text),
       excessCents: _money(_excessRe, text),
       sumInsuredCents: _money(_sumInsuredRe, text),
-      renewalDate: _date(_renewalDateRe, text),
+      expiryDate: _date(_expiryDateRe, text),
       sourceFileName: sourceFileName,
     );
   }

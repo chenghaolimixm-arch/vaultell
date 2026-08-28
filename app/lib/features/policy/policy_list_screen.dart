@@ -51,7 +51,7 @@ class PolicyListScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('${formatMoney(policy.premiumCents)}/年 · 保单号 ${policy.policyNumber.isEmpty ? '—' : policy.policyNumber}'),
-                      Text(renewalLabel(policy.renewalDate), style: const TextStyle(fontSize: 12)),
+                      Text(expiryLabel(policy.endDate), style: const TextStyle(fontSize: 12)),
                     ],
                   ),
                   trailing: Chip(
