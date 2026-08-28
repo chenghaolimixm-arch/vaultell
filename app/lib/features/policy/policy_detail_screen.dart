@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/db/app_database.dart';
 import '../../core/models/insurance_type.dart';
+import '../../core/models/insurer_catalog.dart';
 import '../../core/utils/formatters.dart';
 import '../comparison/comparison_screen.dart';
 import 'policy_form_screen.dart';
@@ -24,6 +26,9 @@ class PolicyDetailScreen extends StatelessWidget {
             return const Center(child: Text('保单不存在或已删除'));
           }
           final type = InsuranceType.fromName(policy.insuranceType);
+          final insurer = InsurerCatalog.byKey(policy.insurerKey) ??
+              InsurerCatalog.byName(policy.insurer);
+          final claimUrl = insurer?.claimUrlFor(type);
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
@@ -57,6 +62,28 @@ class PolicyDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               _QuoteSection(policyId: policyId, database: database),
+              const SizedBox(height: 8),
+              if (claimUrl != null)
+                FilledButton.icon(
+                  icon: const Icon(Icons.open_in_new),
+                  label: const Text('Make a Claim'),
+                  onPressed: () async {
+                    final uri = Uri.tryParse(claimUrl);
+                    if (uri == null) return;
+                    final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    if (!launched && context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('无法打开理赔页面，请稍后再试')),
+                      );
+                    }
+                  },
+                )
+              else
+                OutlinedButton.icon(
+                  onPressed: null,
+                  icon: const Icon(Icons.open_in_new),
+                  label: const Text('Make a Claim（自定义保险公司未配置链接）'),
+                ),
               const SizedBox(height: 8),
               Row(
                 children: [

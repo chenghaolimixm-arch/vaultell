@@ -632,6 +632,12 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
   late final GeneratedColumn<String> insurer = GeneratedColumn<String>(
       'insurer', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _insurerKeyMeta =
+      const VerificationMeta('insurerKey');
+  @override
+  late final GeneratedColumn<String> insurerKey = GeneratedColumn<String>(
+      'insurer_key', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _policyNumberMeta =
       const VerificationMeta('policyNumber');
   @override
@@ -727,6 +733,7 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
         assetId,
         insuranceType,
         insurer,
+        insurerKey,
         policyNumber,
         policyType,
         premiumCents,
@@ -776,6 +783,12 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
           insurer.isAcceptableOrUnknown(data['insurer']!, _insurerMeta));
     } else if (isInserting) {
       context.missing(_insurerMeta);
+    }
+    if (data.containsKey('insurer_key')) {
+      context.handle(
+          _insurerKeyMeta,
+          insurerKey.isAcceptableOrUnknown(
+              data['insurer_key']!, _insurerKeyMeta));
     }
     if (data.containsKey('policy_number')) {
       context.handle(
@@ -856,6 +869,8 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
           .read(DriftSqlType.string, data['${effectivePrefix}insurance_type'])!,
       insurer: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}insurer'])!,
+      insurerKey: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}insurer_key']),
       policyNumber: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}policy_number'])!,
       policyType: attachedDatabase.typeMapping
@@ -895,6 +910,7 @@ class Policy extends DataClass implements Insertable<Policy> {
   final int? assetId;
   final String insuranceType;
   final String insurer;
+  final String? insurerKey;
   final String policyNumber;
   final String policyType;
   final int premiumCents;
@@ -913,6 +929,7 @@ class Policy extends DataClass implements Insertable<Policy> {
       this.assetId,
       required this.insuranceType,
       required this.insurer,
+      this.insurerKey,
       required this.policyNumber,
       required this.policyType,
       required this.premiumCents,
@@ -935,6 +952,9 @@ class Policy extends DataClass implements Insertable<Policy> {
     }
     map['insurance_type'] = Variable<String>(insuranceType);
     map['insurer'] = Variable<String>(insurer);
+    if (!nullToAbsent || insurerKey != null) {
+      map['insurer_key'] = Variable<String>(insurerKey);
+    }
     map['policy_number'] = Variable<String>(policyNumber);
     map['policy_type'] = Variable<String>(policyType);
     map['premium_cents'] = Variable<int>(premiumCents);
@@ -965,6 +985,9 @@ class Policy extends DataClass implements Insertable<Policy> {
           : Value(assetId),
       insuranceType: Value(insuranceType),
       insurer: Value(insurer),
+      insurerKey: insurerKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(insurerKey),
       policyNumber: Value(policyNumber),
       policyType: Value(policyType),
       premiumCents: Value(premiumCents),
@@ -995,6 +1018,7 @@ class Policy extends DataClass implements Insertable<Policy> {
       assetId: serializer.fromJson<int?>(json['assetId']),
       insuranceType: serializer.fromJson<String>(json['insuranceType']),
       insurer: serializer.fromJson<String>(json['insurer']),
+      insurerKey: serializer.fromJson<String?>(json['insurerKey']),
       policyNumber: serializer.fromJson<String>(json['policyNumber']),
       policyType: serializer.fromJson<String>(json['policyType']),
       premiumCents: serializer.fromJson<int>(json['premiumCents']),
@@ -1018,6 +1042,7 @@ class Policy extends DataClass implements Insertable<Policy> {
       'assetId': serializer.toJson<int?>(assetId),
       'insuranceType': serializer.toJson<String>(insuranceType),
       'insurer': serializer.toJson<String>(insurer),
+      'insurerKey': serializer.toJson<String?>(insurerKey),
       'policyNumber': serializer.toJson<String>(policyNumber),
       'policyType': serializer.toJson<String>(policyType),
       'premiumCents': serializer.toJson<int>(premiumCents),
@@ -1039,6 +1064,7 @@ class Policy extends DataClass implements Insertable<Policy> {
           Value<int?> assetId = const Value.absent(),
           String? insuranceType,
           String? insurer,
+          Value<String?> insurerKey = const Value.absent(),
           String? policyNumber,
           String? policyType,
           int? premiumCents,
@@ -1057,6 +1083,7 @@ class Policy extends DataClass implements Insertable<Policy> {
         assetId: assetId.present ? assetId.value : this.assetId,
         insuranceType: insuranceType ?? this.insuranceType,
         insurer: insurer ?? this.insurer,
+        insurerKey: insurerKey.present ? insurerKey.value : this.insurerKey,
         policyNumber: policyNumber ?? this.policyNumber,
         policyType: policyType ?? this.policyType,
         premiumCents: premiumCents ?? this.premiumCents,
@@ -1079,6 +1106,8 @@ class Policy extends DataClass implements Insertable<Policy> {
           ? data.insuranceType.value
           : this.insuranceType,
       insurer: data.insurer.present ? data.insurer.value : this.insurer,
+      insurerKey:
+          data.insurerKey.present ? data.insurerKey.value : this.insurerKey,
       policyNumber: data.policyNumber.present
           ? data.policyNumber.value
           : this.policyNumber,
@@ -1111,6 +1140,7 @@ class Policy extends DataClass implements Insertable<Policy> {
           ..write('assetId: $assetId, ')
           ..write('insuranceType: $insuranceType, ')
           ..write('insurer: $insurer, ')
+          ..write('insurerKey: $insurerKey, ')
           ..write('policyNumber: $policyNumber, ')
           ..write('policyType: $policyType, ')
           ..write('premiumCents: $premiumCents, ')
@@ -1134,6 +1164,7 @@ class Policy extends DataClass implements Insertable<Policy> {
       assetId,
       insuranceType,
       insurer,
+      insurerKey,
       policyNumber,
       policyType,
       premiumCents,
@@ -1155,6 +1186,7 @@ class Policy extends DataClass implements Insertable<Policy> {
           other.assetId == this.assetId &&
           other.insuranceType == this.insuranceType &&
           other.insurer == this.insurer &&
+          other.insurerKey == this.insurerKey &&
           other.policyNumber == this.policyNumber &&
           other.policyType == this.policyType &&
           other.premiumCents == this.premiumCents &&
@@ -1175,6 +1207,7 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
   final Value<int?> assetId;
   final Value<String> insuranceType;
   final Value<String> insurer;
+  final Value<String?> insurerKey;
   final Value<String> policyNumber;
   final Value<String> policyType;
   final Value<int> premiumCents;
@@ -1193,6 +1226,7 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     this.assetId = const Value.absent(),
     this.insuranceType = const Value.absent(),
     this.insurer = const Value.absent(),
+    this.insurerKey = const Value.absent(),
     this.policyNumber = const Value.absent(),
     this.policyType = const Value.absent(),
     this.premiumCents = const Value.absent(),
@@ -1212,6 +1246,7 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     this.assetId = const Value.absent(),
     required String insuranceType,
     required String insurer,
+    this.insurerKey = const Value.absent(),
     this.policyNumber = const Value.absent(),
     this.policyType = const Value.absent(),
     this.premiumCents = const Value.absent(),
@@ -1233,6 +1268,7 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     Expression<int>? assetId,
     Expression<String>? insuranceType,
     Expression<String>? insurer,
+    Expression<String>? insurerKey,
     Expression<String>? policyNumber,
     Expression<String>? policyType,
     Expression<int>? premiumCents,
@@ -1252,6 +1288,7 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
       if (assetId != null) 'asset_id': assetId,
       if (insuranceType != null) 'insurance_type': insuranceType,
       if (insurer != null) 'insurer': insurer,
+      if (insurerKey != null) 'insurer_key': insurerKey,
       if (policyNumber != null) 'policy_number': policyNumber,
       if (policyType != null) 'policy_type': policyType,
       if (premiumCents != null) 'premium_cents': premiumCents,
@@ -1273,6 +1310,7 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
       Value<int?>? assetId,
       Value<String>? insuranceType,
       Value<String>? insurer,
+      Value<String?>? insurerKey,
       Value<String>? policyNumber,
       Value<String>? policyType,
       Value<int>? premiumCents,
@@ -1291,6 +1329,7 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
       assetId: assetId ?? this.assetId,
       insuranceType: insuranceType ?? this.insuranceType,
       insurer: insurer ?? this.insurer,
+      insurerKey: insurerKey ?? this.insurerKey,
       policyNumber: policyNumber ?? this.policyNumber,
       policyType: policyType ?? this.policyType,
       premiumCents: premiumCents ?? this.premiumCents,
@@ -1323,6 +1362,9 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     }
     if (insurer.present) {
       map['insurer'] = Variable<String>(insurer.value);
+    }
+    if (insurerKey.present) {
+      map['insurer_key'] = Variable<String>(insurerKey.value);
     }
     if (policyNumber.present) {
       map['policy_number'] = Variable<String>(policyNumber.value);
@@ -1371,6 +1413,7 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
           ..write('assetId: $assetId, ')
           ..write('insuranceType: $insuranceType, ')
           ..write('insurer: $insurer, ')
+          ..write('insurerKey: $insurerKey, ')
           ..write('policyNumber: $policyNumber, ')
           ..write('policyType: $policyType, ')
           ..write('premiumCents: $premiumCents, ')
@@ -2617,6 +2660,7 @@ typedef $$PoliciesTableCreateCompanionBuilder = PoliciesCompanion Function({
   Value<int?> assetId,
   required String insuranceType,
   required String insurer,
+  Value<String?> insurerKey,
   Value<String> policyNumber,
   Value<String> policyType,
   Value<int> premiumCents,
@@ -2636,6 +2680,7 @@ typedef $$PoliciesTableUpdateCompanionBuilder = PoliciesCompanion Function({
   Value<int?> assetId,
   Value<String> insuranceType,
   Value<String> insurer,
+  Value<String?> insurerKey,
   Value<String> policyNumber,
   Value<String> policyType,
   Value<int> premiumCents,
@@ -2673,6 +2718,9 @@ class $$PoliciesTableFilterComposer
 
   ColumnFilters<String> get insurer => $composableBuilder(
       column: $table.insurer, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get insurerKey => $composableBuilder(
+      column: $table.insurerKey, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get policyNumber => $composableBuilder(
       column: $table.policyNumber, builder: (column) => ColumnFilters(column));
@@ -2737,6 +2785,9 @@ class $$PoliciesTableOrderingComposer
   ColumnOrderings<String> get insurer => $composableBuilder(
       column: $table.insurer, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get insurerKey => $composableBuilder(
+      column: $table.insurerKey, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get policyNumber => $composableBuilder(
       column: $table.policyNumber,
       builder: (column) => ColumnOrderings(column));
@@ -2800,6 +2851,9 @@ class $$PoliciesTableAnnotationComposer
 
   GeneratedColumn<String> get insurer =>
       $composableBuilder(column: $table.insurer, builder: (column) => column);
+
+  GeneratedColumn<String> get insurerKey => $composableBuilder(
+      column: $table.insurerKey, builder: (column) => column);
 
   GeneratedColumn<String> get policyNumber => $composableBuilder(
       column: $table.policyNumber, builder: (column) => column);
@@ -2866,6 +2920,7 @@ class $$PoliciesTableTableManager extends RootTableManager<
             Value<int?> assetId = const Value.absent(),
             Value<String> insuranceType = const Value.absent(),
             Value<String> insurer = const Value.absent(),
+            Value<String?> insurerKey = const Value.absent(),
             Value<String> policyNumber = const Value.absent(),
             Value<String> policyType = const Value.absent(),
             Value<int> premiumCents = const Value.absent(),
@@ -2885,6 +2940,7 @@ class $$PoliciesTableTableManager extends RootTableManager<
             assetId: assetId,
             insuranceType: insuranceType,
             insurer: insurer,
+            insurerKey: insurerKey,
             policyNumber: policyNumber,
             policyType: policyType,
             premiumCents: premiumCents,
@@ -2904,6 +2960,7 @@ class $$PoliciesTableTableManager extends RootTableManager<
             Value<int?> assetId = const Value.absent(),
             required String insuranceType,
             required String insurer,
+            Value<String?> insurerKey = const Value.absent(),
             Value<String> policyNumber = const Value.absent(),
             Value<String> policyType = const Value.absent(),
             Value<int> premiumCents = const Value.absent(),
@@ -2923,6 +2980,7 @@ class $$PoliciesTableTableManager extends RootTableManager<
             assetId: assetId,
             insuranceType: insuranceType,
             insurer: insurer,
+            insurerKey: insurerKey,
             policyNumber: policyNumber,
             policyType: policyType,
             premiumCents: premiumCents,

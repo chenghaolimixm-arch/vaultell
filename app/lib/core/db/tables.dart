@@ -26,6 +26,7 @@ class Policies extends Table {
   IntColumn get assetId => integer().nullable().references(Assets, #id)();
   TextColumn get insuranceType => text()(); // car | home | landlord | health | pet
   TextColumn get insurer => text()();
+  TextColumn get insurerKey => text().nullable()(); // key in InsurerCatalog; null for custom insurers
   TextColumn get policyNumber => text().withDefault(const Constant(''))();
   TextColumn get policyType => text().withDefault(const Constant(''))();
   IntColumn get premiumCents => integer().withDefault(const Constant(0))();

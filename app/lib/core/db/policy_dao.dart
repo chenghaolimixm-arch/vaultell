@@ -43,6 +43,7 @@ class PolicyDao extends DatabaseAccessor<AppDatabase> with _$PolicyDaoMixin {
   Future<Policy> insertPolicy({
     required InsuranceType type,
     required String insurer,
+    String? insurerKey,
     String policyNumber = '',
     String policyType = '',
     int premiumCents = 0,
@@ -75,6 +76,7 @@ class PolicyDao extends DatabaseAccessor<AppDatabase> with _$PolicyDaoMixin {
       assetId: Value(assetId),
       insuranceType: type.name,
       insurer: insurer,
+      insurerKey: Value(insurerKey),
       policyNumber: Value(policyNumber),
       policyType: Value(policyType),
       premiumCents: Value(premiumCents),
@@ -91,6 +93,7 @@ class PolicyDao extends DatabaseAccessor<AppDatabase> with _$PolicyDaoMixin {
   Future<void> updatePolicy(
     int id, {
     required String insurer,
+    String? insurerKey,
     String policyNumber = '',
     String policyType = '',
     int premiumCents = 0,
@@ -102,6 +105,7 @@ class PolicyDao extends DatabaseAccessor<AppDatabase> with _$PolicyDaoMixin {
   }) async {
     await (update(policies)..where((t) => t.id.equals(id))).write(PoliciesCompanion(
       insurer: Value(insurer),
+      insurerKey: Value(insurerKey),
       policyNumber: Value(policyNumber),
       policyType: Value(policyType),
       premiumCents: Value(premiumCents),

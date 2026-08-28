@@ -13,7 +13,17 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) => m.createAll(),
+        onUpgrade: (m, from, to) async {
+          if (from < 2) {
+            await customStatement('ALTER TABLE policies ADD COLUMN insurer_key TEXT;');
+          }
+        },
+      );
 
   late final PolicyDao policyDao = PolicyDao(this);
 }

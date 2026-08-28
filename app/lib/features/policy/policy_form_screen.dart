@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/db/app_database.dart';
 import '../../core/models/insurance_type.dart';
+import '../../core/models/insurer_catalog.dart';
 import '../../core/utils/formatters.dart';
 
 class PolicyFormScreen extends StatefulWidget {
@@ -18,7 +19,6 @@ class PolicyFormScreen extends StatefulWidget {
 class _PolicyFormScreenState extends State<PolicyFormScreen> {
   final _formKey = GlobalKey<FormState>();
 
-  late final TextEditingController _insurer;
   late final TextEditingController _policyNumber;
   late final TextEditingController _policyType;
   late final TextEditingController _premium;
@@ -26,16 +26,17 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
   late final TextEditingController _sumInsured;
   late final TextEditingController _notes;
   late final TextEditingController _assetName;
+  late final TextEditingController _customInsurer;
 
   DateTime? _renewalDate;
   String _status = 'active';
+  String? _insurerKey;
   bool _saving = false;
 
   @override
   void initState() {
     super.initState();
     final p = widget.policy;
-    _insurer = TextEditingController(text: p?.insurer ?? '');
     _policyNumber = TextEditingController(text: p?.policyNumber ?? '');
     _policyType = TextEditingController(text: p?.policyType ?? '');
     _premium = TextEditingController(text: p == null ? '' : (p.premiumCents / 100).toStringAsFixed(2));
@@ -43,13 +44,20 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
     _sumInsured = TextEditingController(text: p == null ? '' : (p.sumInsuredCents / 100).toStringAsFixed(2));
     _notes = TextEditingController(text: p?.notes ?? '');
     _assetName = TextEditingController();
+    _customInsurer = TextEditingController();
     _renewalDate = p?.renewalDate;
     _status = p?.status ?? 'active';
+    if (p != null) {
+      final entry = InsurerCatalog.byKey(p.insurerKey) ?? InsurerCatalog.byName(p.insurer);
+      _insurerKey = entry?.key;
+      if (entry == null && p.insurer.isNotEmpty) {
+        _customInsurer.text = p.insurer;
+      }
+    }
   }
 
   @override
   void dispose() {
-    _insurer.dispose();
     _policyNumber.dispose();
     _policyType.dispose();
     _premium.dispose();
@@ -57,7 +65,16 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
     _sumInsured.dispose();
     _notes.dispose();
     _assetName.dispose();
+    _customInsurer.dispose();
     super.dispose();
+  }
+
+  String get _resolvedInsurerName {
+    if (_insurerKey == InsurerCatalog.customOptionKey) {
+      return _customInsurer.text.trim();
+    }
+    final entry = InsurerCatalog.byKey(_insurerKey);
+    return entry?.name ?? _customInsurer.text.trim();
   }
 
   Future<void> _pickDate() async {
@@ -77,7 +94,9 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
       if (widget.policy == null) {
         await widget.database.policyDao.insertPolicy(
           type: widget.type,
-          insurer: _insurer.text.trim(),
+          insurer: _resolvedInsurerName,
+          insurerKey:
+              _insurerKey == InsurerCatalog.customOptionKey ? null : _insurerKey,
           policyNumber: _policyNumber.text.trim(),
           policyType: _policyType.text.trim(),
           premiumCents: parseDollarsToCents(_premium.text),
@@ -91,7 +110,9 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
       } else {
         await widget.database.policyDao.updatePolicy(
           widget.policy!.id,
-          insurer: _insurer.text.trim(),
+          insurer: _resolvedInsurerName,
+          insurerKey:
+              _insurerKey == InsurerCatalog.customOptionKey ? null : _insurerKey,
           policyNumber: _policyNumber.text.trim(),
           policyType: _policyType.text.trim(),
           premiumCents: parseDollarsToCents(_premium.text),
@@ -130,11 +151,34 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
                   hintText: '可选',
                 ),
               ),
-            TextFormField(
-              controller: _insurer,
-              decoration: const InputDecoration(labelText: '保险公司 *'),
-              validator: (v) => (v == null || v.trim().isEmpty) ? '请填写保险公司' : null,
+            DropdownButtonFormField<String>(
+              initialValue: _insurerKey,
+              decoration: const InputDecoration(labelText: '选择保险公司 *'),
+              hint: const Text('从列表选择，或选「其他」'),
+              items: [
+                for (final entry in InsurerCatalog.all)
+                  DropdownMenuItem(value: entry.key, child: Text(entry.name)),
+                const DropdownMenuItem(
+                  value: InsurerCatalog.customOptionKey,
+                  child: Text('其他 / 自定义…'),
+                ),
+              ],
+              onChanged: (v) => setState(() => _insurerKey = v),
+              validator: (v) {
+                if (v == null) return '请选择保险公司';
+                if (v == InsurerCatalog.customOptionKey && _customInsurer.text.trim().isEmpty) {
+                  return '请输入保险公司名称';
+                }
+                return null;
+              },
             ),
+            if (_insurerKey == InsurerCatalog.customOptionKey)
+              TextFormField(
+                controller: _customInsurer,
+                decoration: const InputDecoration(labelText: '自定义保险公司名称 *'),
+                validator: (v) =>
+                    (v == null || v.trim().isEmpty) ? '请填写保险公司名称' : null,
+              ),
             TextFormField(
               controller: _policyNumber,
               decoration: const InputDecoration(labelText: '保单号'),

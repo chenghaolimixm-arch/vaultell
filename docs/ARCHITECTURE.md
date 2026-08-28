@@ -53,6 +53,7 @@ policies
   id, profile_id FK, asset_id FK (nullable),
   insurance_type (car/home/landlord/health/pet),
   insurer, policy_number, policy_type,
+  insurer_key (nullable，指向保险公司目录，null 表示自定义),
   premium_cents, excess_cents, sum_insured_cents,
   renewal_date, start_date, end_date,
   status (active/cancelled/expired), notes,
@@ -75,6 +76,14 @@ documents
 - `insurance_type == health` 时，每用户最多 1 份 `status == active` 的保单（DAO 层强制）。
 - 金额一律 `_cents` 整数列。
 - `asset_id` 允许为空（健康险、或主体未填写的情况）。
+- `insurer_key` 关联 `InsurerCatalog`（静态目录）；自定义保险公司为 null。
+
+## 4.5 保险公司目录与理赔跳转
+
+- `core/models/insurer_catalog.dart`：18 家澳洲保险公司的名称 + 按险种区分的
+  claim 页面链接（已核实），支持「其他 / 自定义」。
+- 保单详情页 **Make a Claim** 按钮通过 `url_launcher` 打开系统浏览器跳转理赔页面。
+- 目录是启动数据而非数据库表，方便发版更新；如需用户自建目录再迁移到数据库。
 
 ## 4. 模块划分（lib/）
 

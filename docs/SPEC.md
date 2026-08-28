@@ -52,9 +52,19 @@ Profile（本地档案）
 ## 5. 保单字段
 
 - 保险公司、保单号、险种类型、保额类型（agreed/market value）
+- **保险公司从内置目录选择**（CBA、Allianz、RSPCA、AAMI、Medibank、Bupa 等 18 家），
+  也可选择「其他 / 自定义」手动输入。
 - 保费、excess、保额（金额一律以**分**存储，避免浮点误差）
 - renewal date、起止日期、状态（active/cancelled/expired）
 - 可选保障项、主要除外责任、备注
+
+## 5.1 Make a Claim
+
+- 每张保单详情页提供 **Make a Claim** 按钮，直接跳转到该保险公司的在线理赔页面。
+- 理赔链接按险种区分（如 CBA 车险与房屋险页面不同），无专属页面时回退到该公司默认理赔页。
+- 自定义保险公司未配置链接时按钮禁用并提示。
+- 链接来自官方保险公司网站，2026-08 核实；目录文件为
+  `app/lib/core/models/insurer_catalog.dart`，可随时增改。
 
 ## 6. 报价对比 UX
 
