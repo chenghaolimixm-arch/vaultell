@@ -18,6 +18,10 @@
 │  └─ Drift + SQLite         │
 │     （SQLCipher 加密为 P2） │
 │                            │
+│  服务层（core/services）     │
+│  ├─ document_storage_service │ 文件保存到本机私有目录
+│  └─ policy_extraction_service│ PDF 文本/图片 OCR + 规则提取
+│                            │
 │  本地文件（path_provider）  │
 │  └─ documents/ 保单文件     │
 └────────────────────────────┘
@@ -77,6 +81,16 @@ documents
 - 金额一律 `_cents` 整数列。
 - `asset_id` 允许为空（健康险、或主体未填写的情况）。
 - `insurer_key` 关联 `InsurerCatalog`（静态目录）；自定义保险公司为 null。
+
+## 4.6 保单文件导入
+
+- 依赖：`file_picker`（选文件）、`pdf_text`（数字 PDF 文本提取）、
+  `google_mlkit_text_recognition`（图片 OCR）。
+- `DocumentStorageService`：把选中的文件复制到
+  `<应用文档目录>/policy_documents/`，并在 `documents` 表记录路径。
+- `PolicyDataExtractor`（纯 Dart，可单测）：从文字提取字段的规则引擎。
+- `LocalPolicyExtractionService`：PDF/图片 → 文字 → 结构化字段，全设备端。
+- 后续云端 AI 提取实现同一接口，逐份授权后插拔。
 
 ## 4.5 保险公司目录与理赔跳转
 

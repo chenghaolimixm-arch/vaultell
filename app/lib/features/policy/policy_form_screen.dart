@@ -1,8 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/db/app_database.dart';
 import '../../core/models/insurance_type.dart';
 import '../../core/models/insurer_catalog.dart';
+import '../../core/services/document_storage_service.dart';
+import '../../core/services/policy_extraction_service.dart';
 import '../../core/utils/formatters.dart';
 
 class PolicyFormScreen extends StatefulWidget {
@@ -32,6 +35,9 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
   String _status = 'active';
   String? _insurerKey;
   bool _saving = false;
+  bool _importing = false;
+  String? _pendingDocPath;
+  String? _pendingDocName;
 
   @override
   void initState() {
@@ -87,12 +93,81 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
     if (picked != null) setState(() => _renewalDate = picked);
   }
 
+  Future<void> _importFromFile() async {
+    final picked = await FilePicker.pickFile(
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
+    );
+    if (picked == null || picked.path == null || !mounted) return;
+
+    setState(() => _importing = true);
+    try {
+      final savedPath = await DocumentStorageService().savePickedFile(
+        sourcePath: picked.path!,
+        fileName: picked.name,
+      );
+      final data = await LocalPolicyExtractionService().extract(
+        filePath: savedPath,
+        fileName: picked.name,
+      );
+      if (!mounted) return;
+
+      setState(() {
+        _pendingDocPath = savedPath;
+        _pendingDocName = picked.name;
+        if (data.insurerKey != null) {
+          _insurerKey = InsurerCatalog.byKey(data.insurerKey) != null ? data.insurerKey : null;
+        } else if (data.insurer != null) {
+          _insurerKey = InsurerCatalog.customOptionKey;
+          _customInsurer.text = data.insurer!;
+        }
+        if (data.policyNumber != null) _policyNumber.text = data.policyNumber!;
+        if (data.premiumCents != null) {
+          _premium.text = (data.premiumCents! / 100).toStringAsFixed(2);
+        }
+        if (data.excessCents != null) {
+          _excess.text = (data.excessCents! / 100).toStringAsFixed(2);
+        }
+        if (data.sumInsuredCents != null) {
+          _sumInsured.text = (data.sumInsuredCents! / 100).toStringAsFixed(2);
+        }
+        if (data.renewalDate != null) _renewalDate = data.renewalDate;
+      });
+
+      final fields = [
+        if (data.insurer != null) '保险公司',
+        if (data.policyNumber != null) '保单号',
+        if (data.premiumCents != null) '年保费',
+        if (data.excessCents != null) 'Excess',
+        if (data.sumInsuredCents != null) '保额',
+        if (data.renewalDate != null) '续保日期',
+      ];
+      await showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('识别结果'),
+          content: Text(
+            fields.isEmpty
+                ? '没有识别到可用字段，请手动填写。'
+                : '已自动填入：${fields.join('、')}。\n请核对后保存。'
+                    '${data.warning != null ? '\n\n${data.warning}' : ''}',
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(context), child: const Text('好的')),
+          ],
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _importing = false);
+    }
+  }
+
   Future<void> _save() async {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _saving = true);
     try {
       if (widget.policy == null) {
-        await widget.database.policyDao.insertPolicy(
+        final created = await widget.database.policyDao.insertPolicy(
           type: widget.type,
           insurer: _resolvedInsurerName,
           insurerKey:
@@ -107,6 +182,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
           notes: _notes.text.trim(),
           assetName: widget.type.subjectType == null ? null : _assetName.text,
         );
+        await _savePendingDocument(created.id);
       } else {
         await widget.database.policyDao.updatePolicy(
           widget.policy!.id,
@@ -122,6 +198,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
           status: _status,
           notes: _notes.text.trim(),
         );
+        await _savePendingDocument(widget.policy!.id);
       }
       if (mounted) Navigator.of(context).pop();
     } on StateError catch (e) {
@@ -131,6 +208,18 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
     } finally {
       if (mounted) setState(() => _saving = false);
     }
+  }
+
+  Future<void> _savePendingDocument(int policyId) async {
+    final path = _pendingDocPath;
+    final name = _pendingDocName;
+    if (path == null || name == null) return;
+    await widget.database.policyDao.addDocument(
+      policyId: policyId,
+      kind: 'renewal',
+      fileName: name,
+      localPath: path,
+    );
   }
 
   @override
@@ -143,6 +232,18 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            OutlinedButton.icon(
+              onPressed: _importing ? null : _importFromFile,
+              icon: _importing
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.upload_file),
+              label: Text(_importing ? '识别中…' : '从保单文件自动填写（本机识别）'),
+            ),
+            const SizedBox(height: 16),
             if (!isHealth)
               TextFormField(
                 controller: _assetName,

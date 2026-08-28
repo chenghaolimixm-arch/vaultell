@@ -1,9 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/db/app_database.dart';
 import '../../core/models/insurance_type.dart';
 import '../../core/models/insurer_catalog.dart';
+import '../../core/services/document_storage_service.dart';
 import '../../core/utils/formatters.dart';
 import '../comparison/comparison_screen.dart';
 import 'policy_form_screen.dart';
@@ -103,15 +105,34 @@ class PolicyDetailScreen extends StatelessWidget {
                     child: OutlinedButton.icon(
                       icon: const Icon(Icons.upload_file),
                       label: const Text('上传文件'),
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('文件上传将在 Phase 1 里程碑实现（本地存储）')),
+                      onPressed: () async {
+                        final picked = await FilePicker.pickFile(
+                          type: FileType.custom,
+                          allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
                         );
+                        if (picked == null || picked.path == null) return;
+                        final savedPath = await DocumentStorageService().savePickedFile(
+                          sourcePath: picked.path!,
+                          fileName: picked.name,
+                        );
+                        await database.policyDao.addDocument(
+                          policyId: policyId,
+                          kind: 'renewal',
+                          fileName: picked.name,
+                          localPath: savedPath,
+                        );
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('保单文件已保存到本机')),
+                          );
+                        }
                       },
                     ),
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
+              _DocumentsSection(policyId: policyId, database: database),
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -170,6 +191,45 @@ class PolicyDetailScreen extends StatelessWidget {
           Expanded(child: Text(value)),
         ],
       ),
+    );
+  }
+}
+
+class _DocumentsSection extends StatelessWidget {
+  const _DocumentsSection({required this.policyId, required this.database});
+
+  final int policyId;
+  final AppDatabase database;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<List<Document>>(
+      stream: database.policyDao.watchDocumentsForPolicy(policyId),
+      builder: (context, snapshot) {
+        final docs = snapshot.data ?? const <Document>[];
+        return Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('文件', style: Theme.of(context).textTheme.titleMedium),
+                const SizedBox(height: 8),
+                if (docs.isEmpty)
+                  const Text('暂无文件。上传续保单后在这里查看。', style: TextStyle(color: Colors.grey)),
+                for (final doc in docs)
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: const Icon(Icons.description_outlined),
+                    title: Text(doc.fileName, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    subtitle: Text(doc.kind),
+                    trailing: const Icon(Icons.folder, size: 20),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

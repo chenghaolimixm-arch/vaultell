@@ -17,6 +17,9 @@ dependencies:
   intl: ^0.19.0
   local_auth: ^2.2.0
   url_launcher: ^6.3.0
+  file_picker: ^12.1.1
+  google_mlkit_text_recognition: ^0.17.1
+  pdf_text: ^0.5.0
 
 dev_dependencies:
   flutter_test:
