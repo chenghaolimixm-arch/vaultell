@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'core/db/app_database.dart';
 import 'core/theme/app_theme.dart';
+import 'features/settings/app_lock_gate.dart';
 import 'features/wallet/wallet_screen.dart';
 
 class InsuranceProfileApp extends StatelessWidget {
@@ -15,7 +16,7 @@ class InsuranceProfileApp extends StatelessWidget {
       title: 'Insurance Profile',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
-      home: WalletScreen(database: database),
+      home: AppLockGate(child: WalletScreen(database: database)),
     );
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:local_auth/local_auth.dart';
 
 import '../../core/db/app_database.dart';
+import '../../core/services/app_lock_service.dart';
+import 'disclaimers_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key, required this.database});
@@ -13,48 +14,43 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  final _localAuth = LocalAuthentication();
+  final _appLock = AppLockService();
   bool _appLockEnabled = false;
+  bool _hasBiometrics = false;
 
   @override
   void initState() {
     super.initState();
-    _checkBiometrics();
+    _load();
   }
 
-  Future<void> _checkBiometrics() async {
-    try {
-      final available = await _localAuth.canCheckBiometrics;
-      if (available && mounted) {
-        // Phase 1: persist this preference locally (e.g. shared_preferences)
-        // and gate app startup with authentication.
-      }
-    } catch (_) {
-      // Biometric APIs are unavailable on this device/platform.
-    }
+  Future<void> _load() async {
+    final enabled = await _appLock.isEnabled();
+    final hasBiometrics = await _appLock.canUseBiometrics();
+    if (!mounted) return;
+    setState(() {
+      _appLockEnabled = enabled;
+      _hasBiometrics = hasBiometrics;
+    });
   }
 
   Future<void> _toggleAppLock(bool enabled) async {
     if (enabled) {
-      try {
-        final ok = await _localAuth.authenticate(
-          localizedReason: 'Unlock Insurance Profile App',
-          options: const AuthenticationOptions(biometricOnly: true),
-        );
-        if (ok) {
-          if (!mounted) return;
-          setState(() => _appLockEnabled = true);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('App Lock enabled (preference persistence lands in Phase 1)')),
-          );
-        }
-      } catch (_) {
+      final ok = await _appLock.authenticate();
+      if (ok) {
+        await _appLock.setEnabled(true);
         if (!mounted) return;
+        setState(() => _appLockEnabled = true);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Biometric authentication is not available on this device')),
+          const SnackBar(content: Text('App Lock enabled. It will be required next time the app opens.')),
+        );
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Verification failed, App Lock not enabled')),
         );
       }
     } else {
+      await _appLock.setEnabled(false);
       setState(() => _appLockEnabled = false);
     }
   }
@@ -66,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           SwitchListTile(
-            title: const Text('App Lock (biometrics)'),
+            title: const Text('App Lock'),
             subtitle: const Text('Require verification when opening the app'),
             value: _appLockEnabled,
             onChanged: _toggleAppLock,
@@ -74,24 +70,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const Divider(),
           ListTile(
             leading: const Icon(Icons.privacy_tip_outlined),
-            title: const Text('Privacy'),
-            subtitle: const Text('Data stays on this device and is never uploaded'),
-            onTap: () => showDialog<void>(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Privacy'),
-                content: const Text(
-                  'This app is local-first: your policy details, files and extraction results are stored '
-                  'only on this device, never uploaded to any server, and never sold or shared with third parties.'
-                  '\n\nIf cloud AI or backup features are added in the future, they will use per-document '
-                  'consent and end-to-end encryption, and this notice will be updated first.',
-                ),
-                actions: [
-                  TextButton(onPressed: () => Navigator.pop(context), child: const Text('Got it')),
-                ],
-              ),
+            title: const Text('Privacy & Disclaimers'),
+            subtitle: const Text('Local-first storage, information only, not insurance advice'),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const DisclaimersScreen()),
             ),
           ),
+          if (!_hasBiometrics)
+            const ListTile(
+              dense: true,
+              leading: Icon(Icons.info_outline, size: 20),
+              title: Text(
+                'Biometrics unavailable on this device — App Lock will use your device passcode.',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+            ),
           const ListTile(
             leading: Icon(Icons.info_outline),
             title: Text('About'),

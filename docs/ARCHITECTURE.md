@@ -22,6 +22,7 @@
 │  ├─ document_storage_service │ 文件保存到本机私有目录
 │  └─ policy_extraction_service│ PDF 文本/图片 OCR + 规则提取
 │  └─ notification_service     │ 到期前 37 天本地通知（flutter_local_notifications）
+│  └─ app_lock_service         │ App 锁偏好持久化（shared_preferences）+ 生物识别/密码验证
 │                            │
 │  本地文件（path_provider）  │
 │  └─ documents/ 保单文件     │
@@ -113,6 +114,13 @@ documents
   保障项显示「去年 → 今年」变化。
 - 额外保额以 JSON 列表存储（`additional_insured_json`），支持多条「名称 + 金额」。
 - 数据模型已为后续 AI 提取预留字段（去年保费等可直接由 renewal 文档自动填充）。
+
+## 4.9 App 锁与免责声明
+
+- `AppLockService` 用 shared_preferences 持久化开关；`AppLockGate` 在启动时
+  检查开关，开启则先显示锁屏，验证生物识别或设备密码后才进入主界面。
+- 设置页「Privacy & Disclaimers」打开独立页面：本地存储说明、非保险建议声明、
+  mock 报价声明、健康信息敏感声明等（上架所需的隐私政策底稿）。
 
 ## 4.5 保险公司目录与理赔跳转
 
