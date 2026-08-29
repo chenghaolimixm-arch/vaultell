@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/db/app_database.dart';
+import '../../core/models/additional_insured.dart';
 import '../../core/models/insurance_type.dart';
 import '../../core/models/insurer_catalog.dart';
+import '../../core/models/policy_comparison.dart';
 import '../../core/services/document_storage_service.dart';
 import '../../core/services/notification_service.dart';
 import '../../core/utils/formatters.dart';
@@ -63,6 +65,8 @@ class PolicyDetailScreen extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(height: 8),
+              _LastYearComparisonCard(policy: policy, type: type),
               const SizedBox(height: 8),
               _QuoteSection(policyId: policyId, database: database),
               const SizedBox(height: 8),
@@ -180,6 +184,155 @@ class PolicyDetailScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget _kv(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(width: 110, child: Text(label, style: const TextStyle(color: Colors.grey))),
+          Expanded(child: Text(value)),
+        ],
+      ),
+    );
+  }
+}
+
+class _LastYearComparisonCard extends StatelessWidget {
+  const _LastYearComparisonCard({required this.policy, required this.type});
+
+  final Policy policy;
+  final InsuranceType type;
+
+  bool get _hasData =>
+      policy.lastYearPremiumCents > 0 ||
+      policy.lastYearRoadsideAssist ||
+      policy.lastYearWindscreenCover ||
+      policy.lastYearReplacementValueCents > 0 ||
+      policy.lastYearBuildingInsuredCents > 0 ||
+      policy.lastYearContentsInsuredCents > 0 ||
+      policy.lastYearAdditionalInsuredJson != '[]';
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Last year vs this year', style: Theme.of(context).textTheme.titleMedium),
+            const SizedBox(height: 8),
+            if (!_hasData)
+              const Text(
+                'No last-year data yet. Edit the policy to add last year\'s details.',
+                style: TextStyle(color: Colors.grey),
+              )
+            else ...[
+              _premiumRow(),
+              if (type == InsuranceType.car) ...[
+                _changeRow(
+                  'Roadside assistance',
+                  policy.lastYearRoadsideAssist ? 'Yes' : 'No',
+                  policy.roadsideAssist ? 'Yes' : 'No',
+                ),
+                _changeRow(
+                  'Windscreen replacement',
+                  policy.lastYearWindscreenCover ? 'Yes' : 'No',
+                  policy.windscreenCover ? 'Yes' : 'No',
+                ),
+                _moneyRow(
+                  'Replacement value',
+                  policy.lastYearReplacementValueCents,
+                  policy.replacementValueCents,
+                ),
+              ],
+              if (type == InsuranceType.home || type == InsuranceType.landlord) ...[
+                _moneyRow(
+                  'Building insured',
+                  policy.lastYearBuildingInsuredCents,
+                  policy.buildingInsuredCents,
+                ),
+                _moneyRow(
+                  'Contents insured',
+                  policy.lastYearContentsInsuredCents,
+                  policy.contentsInsuredCents,
+                ),
+                for (final item in AdditionalInsured.decode(policy.additionalInsuredJson))
+                  if (item.name.isNotEmpty)
+                    _kv('Additional: ${item.name}', formatMoney(item.cents)),
+              ],
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _premiumRow() {
+    final change = PremiumChange(
+      lastYearCents: policy.lastYearPremiumCents,
+      currentCents: policy.premiumCents,
+    );
+    final color = change.differenceCents > 0
+        ? Colors.red
+        : change.differenceCents < 0
+            ? Colors.green
+            : Colors.grey;
+    final percent = change.percentChange == null
+        ? ''
+        : ' (${change.percentChange!.toStringAsFixed(1)}%)';
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(
+            width: 110,
+            child: Text('Annual premium', style: TextStyle(color: Colors.grey)),
+          ),
+          Expanded(
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(text: '${formatMoney(change.lastYearCents)} → '),
+                  TextSpan(
+                    text: formatMoney(change.currentCents),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextSpan(
+                    text: '  ${formatMoneyChange(change.differenceCents)}$percent',
+                    style: TextStyle(color: color, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _changeRow(String label, String lastYear, String current) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Row(
+        children: [
+          SizedBox(width: 110, child: Text(label, style: const TextStyle(color: Colors.grey))),
+          Expanded(child: Text('$lastYear → $current')),
+        ],
+      ),
+    );
+  }
+
+  Widget _moneyRow(String label, int lastYearCents, int currentCents) {
+    return _changeRow(
+      label,
+      lastYearCents == 0 ? '—' : formatMoney(lastYearCents),
+      currentCents == 0 ? '—' : formatMoney(currentCents),
     );
   }
 

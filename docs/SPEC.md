@@ -85,6 +85,20 @@ Profile（本地档案）
 - 明确展示保额、excess、主要保障项、可选附加、主要除外责任差异。
 - **所有 mock 报价必须标注"示例数据，非真实报价"**。
 
+## 6.1 去年 vs 今年对比（年度续保场景）
+
+保单详情页提供「Last year vs this year」对比卡：
+
+| 险种 | 对比字段 |
+|---|---|
+| 全部 | **Annual premium**（去年 → 今年，显示涨跌金额 + 百分比） |
+| Car | Roadside assistance、Windscreen replacement、Replacement value |
+| Home / Landlord | Building insured、Contents insured、额外保额（多条「名称 + 金额」） |
+
+- 去年数据为可选填写（保单表单「Last year's policy」区），后续可由 AI 从
+  去年 renewal 文档自动提取。
+- 保费上涨红色、下降绿色；保障项显示「No → Yes」或金额变化。
+
 ## 7. AI 职责（MVP 边界）
 
 ✅ 读取并提取 renewal notice / 保单 / 报价文档字段

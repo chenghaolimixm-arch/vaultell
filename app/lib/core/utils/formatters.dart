@@ -5,6 +5,11 @@ String formatMoney(int cents) {
   return '\$${dollars.toStringAsFixed(2)}';
 }
 
+String formatMoneyChange(int cents) {
+  final dollars = cents / 100;
+  return cents >= 0 ? '+\$${dollars.toStringAsFixed(2)}' : '-\$${dollars.abs().toStringAsFixed(2)}';
+}
+
 String formatDate(DateTime? date) {
   if (date == null) return '—';
   return DateFormat('dd MMM yyyy', 'en_US').format(date);

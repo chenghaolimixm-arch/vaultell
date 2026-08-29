@@ -2,6 +2,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/db/app_database.dart';
+import '../../core/models/additional_insured.dart';
 import '../../core/models/insurance_type.dart';
 import '../../core/models/insurer_catalog.dart';
 import '../../core/services/document_storage_service.dart';
@@ -31,6 +32,13 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
   late final TextEditingController _notes;
   late final TextEditingController _assetName;
   late final TextEditingController _customInsurer;
+  late final TextEditingController _replacementValue;
+  late final TextEditingController _buildingInsured;
+  late final TextEditingController _contentsInsured;
+  late final TextEditingController _lastYearPremium;
+  late final TextEditingController _lastYearReplacementValue;
+  late final TextEditingController _lastYearBuildingInsured;
+  late final TextEditingController _lastYearContentsInsured;
 
   DateTime? _expiryDate;
   String _status = 'active';
@@ -39,6 +47,12 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
   bool _importing = false;
   String? _pendingDocPath;
   String? _pendingDocName;
+  bool _roadsideAssist = false;
+  bool _windscreenCover = false;
+  bool _lastYearRoadsideAssist = false;
+  bool _lastYearWindscreenCover = false;
+  List<AdditionalInsured> _additionalInsured = [];
+  List<AdditionalInsured> _lastYearAdditionalInsured = [];
 
   @override
   void initState() {
@@ -52,8 +66,36 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
     _notes = TextEditingController(text: p?.notes ?? '');
     _assetName = TextEditingController();
     _customInsurer = TextEditingController();
+    _replacementValue = TextEditingController(
+      text: p == null ? '' : (p.replacementValueCents / 100).toStringAsFixed(2),
+    );
+    _buildingInsured = TextEditingController(
+      text: p == null ? '' : (p.buildingInsuredCents / 100).toStringAsFixed(2),
+    );
+    _contentsInsured = TextEditingController(
+      text: p == null ? '' : (p.contentsInsuredCents / 100).toStringAsFixed(2),
+    );
+    _lastYearPremium = TextEditingController(
+      text: p == null ? '' : (p.lastYearPremiumCents / 100).toStringAsFixed(2),
+    );
+    _lastYearReplacementValue = TextEditingController(
+      text: p == null ? '' : (p.lastYearReplacementValueCents / 100).toStringAsFixed(2),
+    );
+    _lastYearBuildingInsured = TextEditingController(
+      text: p == null ? '' : (p.lastYearBuildingInsuredCents / 100).toStringAsFixed(2),
+    );
+    _lastYearContentsInsured = TextEditingController(
+      text: p == null ? '' : (p.lastYearContentsInsuredCents / 100).toStringAsFixed(2),
+    );
     _expiryDate = p?.endDate;
     _status = p?.status ?? 'active';
+    _roadsideAssist = p?.roadsideAssist ?? false;
+    _windscreenCover = p?.windscreenCover ?? false;
+    _lastYearRoadsideAssist = p?.lastYearRoadsideAssist ?? false;
+    _lastYearWindscreenCover = p?.lastYearWindscreenCover ?? false;
+    _additionalInsured = AdditionalInsured.decode(p?.additionalInsuredJson ?? '[]');
+    _lastYearAdditionalInsured =
+        AdditionalInsured.decode(p?.lastYearAdditionalInsuredJson ?? '[]');
     if (p != null) {
       final entry = InsurerCatalog.byKey(p.insurerKey) ?? InsurerCatalog.byName(p.insurer);
       _insurerKey = entry?.key;
@@ -73,8 +115,20 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
     _notes.dispose();
     _assetName.dispose();
     _customInsurer.dispose();
+    _replacementValue.dispose();
+    _buildingInsured.dispose();
+    _contentsInsured.dispose();
+    _lastYearPremium.dispose();
+    _lastYearReplacementValue.dispose();
+    _lastYearBuildingInsured.dispose();
+    _lastYearContentsInsured.dispose();
     super.dispose();
   }
+
+  bool get _isCar => widget.type == InsuranceType.car;
+
+  bool get _isHomeLandlord =>
+      widget.type == InsuranceType.home || widget.type == InsuranceType.landlord;
 
   String get _resolvedInsurerName {
     if (_insurerKey == InsurerCatalog.customOptionKey) {
@@ -182,6 +236,23 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
           status: _status,
           notes: _notes.text.trim(),
           assetName: widget.type.subjectType == null ? null : _assetName.text,
+          roadsideAssist: _roadsideAssist,
+          windscreenCover: _windscreenCover,
+          replacementValueCents: parseDollarsToCents(_replacementValue.text),
+          buildingInsuredCents: parseDollarsToCents(_buildingInsured.text),
+          contentsInsuredCents: parseDollarsToCents(_contentsInsured.text),
+          additionalInsuredJson: AdditionalInsured.encode(_additionalInsured),
+          lastYearPremiumCents: parseDollarsToCents(_lastYearPremium.text),
+          lastYearRoadsideAssist: _lastYearRoadsideAssist,
+          lastYearWindscreenCover: _lastYearWindscreenCover,
+          lastYearReplacementValueCents:
+              parseDollarsToCents(_lastYearReplacementValue.text),
+          lastYearBuildingInsuredCents:
+              parseDollarsToCents(_lastYearBuildingInsured.text),
+          lastYearContentsInsuredCents:
+              parseDollarsToCents(_lastYearContentsInsured.text),
+          lastYearAdditionalInsuredJson:
+              AdditionalInsured.encode(_lastYearAdditionalInsured),
         );
         await _savePendingDocument(created.id);
         await _syncNotification(created.id);
@@ -199,6 +270,23 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
           endDate: _expiryDate,
           status: _status,
           notes: _notes.text.trim(),
+          roadsideAssist: _roadsideAssist,
+          windscreenCover: _windscreenCover,
+          replacementValueCents: parseDollarsToCents(_replacementValue.text),
+          buildingInsuredCents: parseDollarsToCents(_buildingInsured.text),
+          contentsInsuredCents: parseDollarsToCents(_contentsInsured.text),
+          additionalInsuredJson: AdditionalInsured.encode(_additionalInsured),
+          lastYearPremiumCents: parseDollarsToCents(_lastYearPremium.text),
+          lastYearRoadsideAssist: _lastYearRoadsideAssist,
+          lastYearWindscreenCover: _lastYearWindscreenCover,
+          lastYearReplacementValueCents:
+              parseDollarsToCents(_lastYearReplacementValue.text),
+          lastYearBuildingInsuredCents:
+              parseDollarsToCents(_lastYearBuildingInsured.text),
+          lastYearContentsInsuredCents:
+              parseDollarsToCents(_lastYearContentsInsured.text),
+          lastYearAdditionalInsuredJson:
+              AdditionalInsured.encode(_lastYearAdditionalInsured),
         );
         await _savePendingDocument(widget.policy!.id);
         await _syncNotification(widget.policy!.id);
@@ -235,6 +323,90 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
       kind: 'renewal',
       fileName: name,
       localPath: path,
+    );
+  }
+
+  Widget _sectionTitle(String text) => Padding(
+        padding: const EdgeInsets.only(top: 18, bottom: 4),
+        child: Text(
+          text,
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall
+              ?.copyWith(fontWeight: FontWeight.bold),
+        ),
+      );
+
+  void _updateAdditional(
+    List<AdditionalInsured> items,
+    int index, {
+    String? name,
+    int? cents,
+    required ValueChanged<List<AdditionalInsured>> onChanged,
+  }) {
+    final copy = List.of(items);
+    copy[index] = AdditionalInsured(
+      name: name ?? copy[index].name,
+      cents: cents ?? copy[index].cents,
+    );
+    onChanged(copy);
+  }
+
+  Widget _additionalInsuredEditor({
+    required String title,
+    required List<AdditionalInsured> items,
+    required ValueChanged<List<AdditionalInsured>> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionTitle(title),
+        for (var i = 0; i < items.length; i++)
+          Row(
+            children: [
+              Expanded(
+                flex: 3,
+                child: TextFormField(
+                  initialValue: items[i].name,
+                  decoration: InputDecoration(labelText: 'Item ${i + 1}'),
+                  onChanged: (v) =>
+                      _updateAdditional(items, i, name: v, onChanged: onChanged),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                flex: 2,
+                child: TextFormField(
+                  initialValue: items[i].cents == 0
+                      ? ''
+                      : (items[i].cents / 100).toStringAsFixed(2),
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(labelText: 'Amount (AUD)'),
+                  onChanged: (v) => _updateAdditional(
+                    items,
+                    i,
+                    cents: parseDollarsToCents(v),
+                    onChanged: onChanged,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.remove_circle_outline),
+                onPressed: () {
+                  final copy = List.of(items);
+                  copy.removeAt(i);
+                  onChanged(copy);
+                },
+              ),
+            ],
+          ),
+        TextButton.icon(
+          icon: const Icon(Icons.add),
+          label: const Text('Add amount'),
+          onPressed: () =>
+              onChanged([...items, const AdditionalInsured(name: '', cents: 0)]),
+        ),
+      ],
     );
   }
 
@@ -319,6 +491,44 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
               decoration: const InputDecoration(labelText: 'Sum insured (AUD)'),
             ),
+            if (_isCar) ...[
+              _sectionTitle('Cover details'),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Roadside assistance'),
+                value: _roadsideAssist,
+                onChanged: (v) => setState(() => _roadsideAssist = v),
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Windscreen replacement cover'),
+                value: _windscreenCover,
+                onChanged: (v) => setState(() => _windscreenCover = v),
+              ),
+              TextFormField(
+                controller: _replacementValue,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(labelText: 'Replacement value (AUD)'),
+              ),
+            ],
+            if (_isHomeLandlord) ...[
+              _sectionTitle('Cover details'),
+              TextFormField(
+                controller: _buildingInsured,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(labelText: 'Building insured (AUD)'),
+              ),
+              TextFormField(
+                controller: _contentsInsured,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: const InputDecoration(labelText: 'Contents insured (AUD)'),
+              ),
+              _additionalInsuredEditor(
+                title: 'Additional insured amounts',
+                items: _additionalInsured,
+                onChanged: (v) => setState(() => _additionalInsured = v),
+              ),
+            ],
             const SizedBox(height: 12),
             ListTile(
               contentPadding: EdgeInsets.zero,
@@ -342,6 +552,51 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
               decoration: const InputDecoration(labelText: 'Notes'),
               maxLines: 2,
             ),
+            _sectionTitle("Last year's policy (optional)"),
+            TextFormField(
+              controller: _lastYearPremium,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              decoration: const InputDecoration(labelText: "Last year's premium (AUD)"),
+            ),
+            if (_isCar) ...[
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text("Last year's roadside assistance"),
+                value: _lastYearRoadsideAssist,
+                onChanged: (v) => setState(() => _lastYearRoadsideAssist = v),
+              ),
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text("Last year's windscreen cover"),
+                value: _lastYearWindscreenCover,
+                onChanged: (v) => setState(() => _lastYearWindscreenCover = v),
+              ),
+              TextFormField(
+                controller: _lastYearReplacementValue,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration:
+                    const InputDecoration(labelText: "Last year's replacement value (AUD)"),
+              ),
+            ],
+            if (_isHomeLandlord) ...[
+              TextFormField(
+                controller: _lastYearBuildingInsured,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration:
+                    const InputDecoration(labelText: "Last year's building insured (AUD)"),
+              ),
+              TextFormField(
+                controller: _lastYearContentsInsured,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration:
+                    const InputDecoration(labelText: "Last year's contents insured (AUD)"),
+              ),
+              _additionalInsuredEditor(
+                title: "Last year's additional amounts",
+                items: _lastYearAdditionalInsured,
+                onChanged: (v) => setState(() => _lastYearAdditionalInsured = v),
+              ),
+            ],
             const SizedBox(height: 24),
             FilledButton(
               onPressed: _saving ? null : _save,

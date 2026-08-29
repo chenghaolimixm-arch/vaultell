@@ -60,6 +60,9 @@ policies
   insurer, policy_number, policy_type,
   insurer_key (nullable，指向保险公司目录，null 表示自定义),
   premium_cents, excess_cents, sum_insured_cents,
+  roadside_assist / windscreen_cover / replacement_value_cents (车险),
+  building_insured_cents / contents_insured_cents / additional_insured_json (房屋/房东险),
+  last_year_* 系列字段（去年保单快照，用于年度对比）,
   start_date, end_date (policy expiry date),
   renewal_date (legacy，界面已不再使用),
   status (active/cancelled/expired), notes,
@@ -100,6 +103,16 @@ documents
 - 保险公司通常提前 30 天发续保邮件，37 天提醒为用户留出一周比较时间。
 - 删除保单会取消对应通知；App 启动时会根据当前所有有效保单重排通知（`resyncAll`）。
 - 通知完全在设备端调度（`flutter_local_notifications` + `timezone`），无服务器、无推送服务。
+
+## 4.8 去年 vs 今年对比
+
+- 每张保单在录入时可填写「去年的保单信息」（可选）：去年保费，以及按险种区分的
+  保障细节（车险：roadside/windscreen/车 replacement value；房屋/房东险：
+  building insured / contents insured / 额外保额列表）。
+- 保单详情页展示对比卡：保费用红/绿标出涨跌金额与百分比；
+  保障项显示「去年 → 今年」变化。
+- 额外保额以 JSON 列表存储（`additional_insured_json`），支持多条「名称 + 金额」。
+- 数据模型已为后续 AI 提取预留字段（去年保费等可直接由 renewal 文档自动填充）。
 
 ## 4.5 保险公司目录与理赔跳转
 

@@ -678,6 +678,122 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       defaultValue: const Constant(0));
+  static const VerificationMeta _roadsideAssistMeta =
+      const VerificationMeta('roadsideAssist');
+  @override
+  late final GeneratedColumn<bool> roadsideAssist = GeneratedColumn<bool>(
+      'roadside_assist', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("roadside_assist" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _windscreenCoverMeta =
+      const VerificationMeta('windscreenCover');
+  @override
+  late final GeneratedColumn<bool> windscreenCover = GeneratedColumn<bool>(
+      'windscreen_cover', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("windscreen_cover" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _replacementValueCentsMeta =
+      const VerificationMeta('replacementValueCents');
+  @override
+  late final GeneratedColumn<int> replacementValueCents = GeneratedColumn<int>(
+      'replacement_value_cents', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _buildingInsuredCentsMeta =
+      const VerificationMeta('buildingInsuredCents');
+  @override
+  late final GeneratedColumn<int> buildingInsuredCents = GeneratedColumn<int>(
+      'building_insured_cents', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _contentsInsuredCentsMeta =
+      const VerificationMeta('contentsInsuredCents');
+  @override
+  late final GeneratedColumn<int> contentsInsuredCents = GeneratedColumn<int>(
+      'contents_insured_cents', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _additionalInsuredJsonMeta =
+      const VerificationMeta('additionalInsuredJson');
+  @override
+  late final GeneratedColumn<String> additionalInsuredJson =
+      GeneratedColumn<String>('additional_insured_json', aliasedName, false,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          defaultValue: const Constant('[]'));
+  static const VerificationMeta _lastYearPremiumCentsMeta =
+      const VerificationMeta('lastYearPremiumCents');
+  @override
+  late final GeneratedColumn<int> lastYearPremiumCents = GeneratedColumn<int>(
+      'last_year_premium_cents', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  static const VerificationMeta _lastYearRoadsideAssistMeta =
+      const VerificationMeta('lastYearRoadsideAssist');
+  @override
+  late final GeneratedColumn<bool> lastYearRoadsideAssist =
+      GeneratedColumn<bool>('last_year_roadside_assist', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintIsAlways(
+              'CHECK ("last_year_roadside_assist" IN (0, 1))'),
+          defaultValue: const Constant(false));
+  static const VerificationMeta _lastYearWindscreenCoverMeta =
+      const VerificationMeta('lastYearWindscreenCover');
+  @override
+  late final GeneratedColumn<bool> lastYearWindscreenCover =
+      GeneratedColumn<bool>('last_year_windscreen_cover', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintIsAlways(
+              'CHECK ("last_year_windscreen_cover" IN (0, 1))'),
+          defaultValue: const Constant(false));
+  static const VerificationMeta _lastYearReplacementValueCentsMeta =
+      const VerificationMeta('lastYearReplacementValueCents');
+  @override
+  late final GeneratedColumn<int> lastYearReplacementValueCents =
+      GeneratedColumn<int>(
+          'last_year_replacement_value_cents', aliasedName, false,
+          type: DriftSqlType.int,
+          requiredDuringInsert: false,
+          defaultValue: const Constant(0));
+  static const VerificationMeta _lastYearBuildingInsuredCentsMeta =
+      const VerificationMeta('lastYearBuildingInsuredCents');
+  @override
+  late final GeneratedColumn<int> lastYearBuildingInsuredCents =
+      GeneratedColumn<int>(
+          'last_year_building_insured_cents', aliasedName, false,
+          type: DriftSqlType.int,
+          requiredDuringInsert: false,
+          defaultValue: const Constant(0));
+  static const VerificationMeta _lastYearContentsInsuredCentsMeta =
+      const VerificationMeta('lastYearContentsInsuredCents');
+  @override
+  late final GeneratedColumn<int> lastYearContentsInsuredCents =
+      GeneratedColumn<int>(
+          'last_year_contents_insured_cents', aliasedName, false,
+          type: DriftSqlType.int,
+          requiredDuringInsert: false,
+          defaultValue: const Constant(0));
+  static const VerificationMeta _lastYearAdditionalInsuredJsonMeta =
+      const VerificationMeta('lastYearAdditionalInsuredJson');
+  @override
+  late final GeneratedColumn<String> lastYearAdditionalInsuredJson =
+      GeneratedColumn<String>(
+          'last_year_additional_insured_json', aliasedName, false,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          defaultValue: const Constant('[]'));
   static const VerificationMeta _startDateMeta =
       const VerificationMeta('startDate');
   @override
@@ -739,6 +855,19 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
         premiumCents,
         excessCents,
         sumInsuredCents,
+        roadsideAssist,
+        windscreenCover,
+        replacementValueCents,
+        buildingInsuredCents,
+        contentsInsuredCents,
+        additionalInsuredJson,
+        lastYearPremiumCents,
+        lastYearRoadsideAssist,
+        lastYearWindscreenCover,
+        lastYearReplacementValueCents,
+        lastYearBuildingInsuredCents,
+        lastYearContentsInsuredCents,
+        lastYearAdditionalInsuredJson,
         startDate,
         endDate,
         renewalDate,
@@ -820,6 +949,89 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
           sumInsuredCents.isAcceptableOrUnknown(
               data['sum_insured_cents']!, _sumInsuredCentsMeta));
     }
+    if (data.containsKey('roadside_assist')) {
+      context.handle(
+          _roadsideAssistMeta,
+          roadsideAssist.isAcceptableOrUnknown(
+              data['roadside_assist']!, _roadsideAssistMeta));
+    }
+    if (data.containsKey('windscreen_cover')) {
+      context.handle(
+          _windscreenCoverMeta,
+          windscreenCover.isAcceptableOrUnknown(
+              data['windscreen_cover']!, _windscreenCoverMeta));
+    }
+    if (data.containsKey('replacement_value_cents')) {
+      context.handle(
+          _replacementValueCentsMeta,
+          replacementValueCents.isAcceptableOrUnknown(
+              data['replacement_value_cents']!, _replacementValueCentsMeta));
+    }
+    if (data.containsKey('building_insured_cents')) {
+      context.handle(
+          _buildingInsuredCentsMeta,
+          buildingInsuredCents.isAcceptableOrUnknown(
+              data['building_insured_cents']!, _buildingInsuredCentsMeta));
+    }
+    if (data.containsKey('contents_insured_cents')) {
+      context.handle(
+          _contentsInsuredCentsMeta,
+          contentsInsuredCents.isAcceptableOrUnknown(
+              data['contents_insured_cents']!, _contentsInsuredCentsMeta));
+    }
+    if (data.containsKey('additional_insured_json')) {
+      context.handle(
+          _additionalInsuredJsonMeta,
+          additionalInsuredJson.isAcceptableOrUnknown(
+              data['additional_insured_json']!, _additionalInsuredJsonMeta));
+    }
+    if (data.containsKey('last_year_premium_cents')) {
+      context.handle(
+          _lastYearPremiumCentsMeta,
+          lastYearPremiumCents.isAcceptableOrUnknown(
+              data['last_year_premium_cents']!, _lastYearPremiumCentsMeta));
+    }
+    if (data.containsKey('last_year_roadside_assist')) {
+      context.handle(
+          _lastYearRoadsideAssistMeta,
+          lastYearRoadsideAssist.isAcceptableOrUnknown(
+              data['last_year_roadside_assist']!, _lastYearRoadsideAssistMeta));
+    }
+    if (data.containsKey('last_year_windscreen_cover')) {
+      context.handle(
+          _lastYearWindscreenCoverMeta,
+          lastYearWindscreenCover.isAcceptableOrUnknown(
+              data['last_year_windscreen_cover']!,
+              _lastYearWindscreenCoverMeta));
+    }
+    if (data.containsKey('last_year_replacement_value_cents')) {
+      context.handle(
+          _lastYearReplacementValueCentsMeta,
+          lastYearReplacementValueCents.isAcceptableOrUnknown(
+              data['last_year_replacement_value_cents']!,
+              _lastYearReplacementValueCentsMeta));
+    }
+    if (data.containsKey('last_year_building_insured_cents')) {
+      context.handle(
+          _lastYearBuildingInsuredCentsMeta,
+          lastYearBuildingInsuredCents.isAcceptableOrUnknown(
+              data['last_year_building_insured_cents']!,
+              _lastYearBuildingInsuredCentsMeta));
+    }
+    if (data.containsKey('last_year_contents_insured_cents')) {
+      context.handle(
+          _lastYearContentsInsuredCentsMeta,
+          lastYearContentsInsuredCents.isAcceptableOrUnknown(
+              data['last_year_contents_insured_cents']!,
+              _lastYearContentsInsuredCentsMeta));
+    }
+    if (data.containsKey('last_year_additional_insured_json')) {
+      context.handle(
+          _lastYearAdditionalInsuredJsonMeta,
+          lastYearAdditionalInsuredJson.isAcceptableOrUnknown(
+              data['last_year_additional_insured_json']!,
+              _lastYearAdditionalInsuredJsonMeta));
+    }
     if (data.containsKey('start_date')) {
       context.handle(_startDateMeta,
           startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
@@ -881,6 +1093,39 @@ class $PoliciesTable extends Policies with TableInfo<$PoliciesTable, Policy> {
           .read(DriftSqlType.int, data['${effectivePrefix}excess_cents'])!,
       sumInsuredCents: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}sum_insured_cents'])!,
+      roadsideAssist: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}roadside_assist'])!,
+      windscreenCover: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}windscreen_cover'])!,
+      replacementValueCents: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}replacement_value_cents'])!,
+      buildingInsuredCents: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}building_insured_cents'])!,
+      contentsInsuredCents: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}contents_insured_cents'])!,
+      additionalInsuredJson: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}additional_insured_json'])!,
+      lastYearPremiumCents: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}last_year_premium_cents'])!,
+      lastYearRoadsideAssist: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}last_year_roadside_assist'])!,
+      lastYearWindscreenCover: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}last_year_windscreen_cover'])!,
+      lastYearReplacementValueCents: attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}last_year_replacement_value_cents'])!,
+      lastYearBuildingInsuredCents: attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}last_year_building_insured_cents'])!,
+      lastYearContentsInsuredCents: attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}last_year_contents_insured_cents'])!,
+      lastYearAdditionalInsuredJson: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}last_year_additional_insured_json'])!,
       startDate: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date']),
       endDate: attachedDatabase.typeMapping
@@ -916,6 +1161,19 @@ class Policy extends DataClass implements Insertable<Policy> {
   final int premiumCents;
   final int excessCents;
   final int sumInsuredCents;
+  final bool roadsideAssist;
+  final bool windscreenCover;
+  final int replacementValueCents;
+  final int buildingInsuredCents;
+  final int contentsInsuredCents;
+  final String additionalInsuredJson;
+  final int lastYearPremiumCents;
+  final bool lastYearRoadsideAssist;
+  final bool lastYearWindscreenCover;
+  final int lastYearReplacementValueCents;
+  final int lastYearBuildingInsuredCents;
+  final int lastYearContentsInsuredCents;
+  final String lastYearAdditionalInsuredJson;
   final DateTime? startDate;
   final DateTime? endDate;
   final DateTime? renewalDate;
@@ -935,6 +1193,19 @@ class Policy extends DataClass implements Insertable<Policy> {
       required this.premiumCents,
       required this.excessCents,
       required this.sumInsuredCents,
+      required this.roadsideAssist,
+      required this.windscreenCover,
+      required this.replacementValueCents,
+      required this.buildingInsuredCents,
+      required this.contentsInsuredCents,
+      required this.additionalInsuredJson,
+      required this.lastYearPremiumCents,
+      required this.lastYearRoadsideAssist,
+      required this.lastYearWindscreenCover,
+      required this.lastYearReplacementValueCents,
+      required this.lastYearBuildingInsuredCents,
+      required this.lastYearContentsInsuredCents,
+      required this.lastYearAdditionalInsuredJson,
       this.startDate,
       this.endDate,
       this.renewalDate,
@@ -960,6 +1231,23 @@ class Policy extends DataClass implements Insertable<Policy> {
     map['premium_cents'] = Variable<int>(premiumCents);
     map['excess_cents'] = Variable<int>(excessCents);
     map['sum_insured_cents'] = Variable<int>(sumInsuredCents);
+    map['roadside_assist'] = Variable<bool>(roadsideAssist);
+    map['windscreen_cover'] = Variable<bool>(windscreenCover);
+    map['replacement_value_cents'] = Variable<int>(replacementValueCents);
+    map['building_insured_cents'] = Variable<int>(buildingInsuredCents);
+    map['contents_insured_cents'] = Variable<int>(contentsInsuredCents);
+    map['additional_insured_json'] = Variable<String>(additionalInsuredJson);
+    map['last_year_premium_cents'] = Variable<int>(lastYearPremiumCents);
+    map['last_year_roadside_assist'] = Variable<bool>(lastYearRoadsideAssist);
+    map['last_year_windscreen_cover'] = Variable<bool>(lastYearWindscreenCover);
+    map['last_year_replacement_value_cents'] =
+        Variable<int>(lastYearReplacementValueCents);
+    map['last_year_building_insured_cents'] =
+        Variable<int>(lastYearBuildingInsuredCents);
+    map['last_year_contents_insured_cents'] =
+        Variable<int>(lastYearContentsInsuredCents);
+    map['last_year_additional_insured_json'] =
+        Variable<String>(lastYearAdditionalInsuredJson);
     if (!nullToAbsent || startDate != null) {
       map['start_date'] = Variable<DateTime>(startDate);
     }
@@ -993,6 +1281,19 @@ class Policy extends DataClass implements Insertable<Policy> {
       premiumCents: Value(premiumCents),
       excessCents: Value(excessCents),
       sumInsuredCents: Value(sumInsuredCents),
+      roadsideAssist: Value(roadsideAssist),
+      windscreenCover: Value(windscreenCover),
+      replacementValueCents: Value(replacementValueCents),
+      buildingInsuredCents: Value(buildingInsuredCents),
+      contentsInsuredCents: Value(contentsInsuredCents),
+      additionalInsuredJson: Value(additionalInsuredJson),
+      lastYearPremiumCents: Value(lastYearPremiumCents),
+      lastYearRoadsideAssist: Value(lastYearRoadsideAssist),
+      lastYearWindscreenCover: Value(lastYearWindscreenCover),
+      lastYearReplacementValueCents: Value(lastYearReplacementValueCents),
+      lastYearBuildingInsuredCents: Value(lastYearBuildingInsuredCents),
+      lastYearContentsInsuredCents: Value(lastYearContentsInsuredCents),
+      lastYearAdditionalInsuredJson: Value(lastYearAdditionalInsuredJson),
       startDate: startDate == null && nullToAbsent
           ? const Value.absent()
           : Value(startDate),
@@ -1024,6 +1325,30 @@ class Policy extends DataClass implements Insertable<Policy> {
       premiumCents: serializer.fromJson<int>(json['premiumCents']),
       excessCents: serializer.fromJson<int>(json['excessCents']),
       sumInsuredCents: serializer.fromJson<int>(json['sumInsuredCents']),
+      roadsideAssist: serializer.fromJson<bool>(json['roadsideAssist']),
+      windscreenCover: serializer.fromJson<bool>(json['windscreenCover']),
+      replacementValueCents:
+          serializer.fromJson<int>(json['replacementValueCents']),
+      buildingInsuredCents:
+          serializer.fromJson<int>(json['buildingInsuredCents']),
+      contentsInsuredCents:
+          serializer.fromJson<int>(json['contentsInsuredCents']),
+      additionalInsuredJson:
+          serializer.fromJson<String>(json['additionalInsuredJson']),
+      lastYearPremiumCents:
+          serializer.fromJson<int>(json['lastYearPremiumCents']),
+      lastYearRoadsideAssist:
+          serializer.fromJson<bool>(json['lastYearRoadsideAssist']),
+      lastYearWindscreenCover:
+          serializer.fromJson<bool>(json['lastYearWindscreenCover']),
+      lastYearReplacementValueCents:
+          serializer.fromJson<int>(json['lastYearReplacementValueCents']),
+      lastYearBuildingInsuredCents:
+          serializer.fromJson<int>(json['lastYearBuildingInsuredCents']),
+      lastYearContentsInsuredCents:
+          serializer.fromJson<int>(json['lastYearContentsInsuredCents']),
+      lastYearAdditionalInsuredJson:
+          serializer.fromJson<String>(json['lastYearAdditionalInsuredJson']),
       startDate: serializer.fromJson<DateTime?>(json['startDate']),
       endDate: serializer.fromJson<DateTime?>(json['endDate']),
       renewalDate: serializer.fromJson<DateTime?>(json['renewalDate']),
@@ -1048,6 +1373,24 @@ class Policy extends DataClass implements Insertable<Policy> {
       'premiumCents': serializer.toJson<int>(premiumCents),
       'excessCents': serializer.toJson<int>(excessCents),
       'sumInsuredCents': serializer.toJson<int>(sumInsuredCents),
+      'roadsideAssist': serializer.toJson<bool>(roadsideAssist),
+      'windscreenCover': serializer.toJson<bool>(windscreenCover),
+      'replacementValueCents': serializer.toJson<int>(replacementValueCents),
+      'buildingInsuredCents': serializer.toJson<int>(buildingInsuredCents),
+      'contentsInsuredCents': serializer.toJson<int>(contentsInsuredCents),
+      'additionalInsuredJson': serializer.toJson<String>(additionalInsuredJson),
+      'lastYearPremiumCents': serializer.toJson<int>(lastYearPremiumCents),
+      'lastYearRoadsideAssist': serializer.toJson<bool>(lastYearRoadsideAssist),
+      'lastYearWindscreenCover':
+          serializer.toJson<bool>(lastYearWindscreenCover),
+      'lastYearReplacementValueCents':
+          serializer.toJson<int>(lastYearReplacementValueCents),
+      'lastYearBuildingInsuredCents':
+          serializer.toJson<int>(lastYearBuildingInsuredCents),
+      'lastYearContentsInsuredCents':
+          serializer.toJson<int>(lastYearContentsInsuredCents),
+      'lastYearAdditionalInsuredJson':
+          serializer.toJson<String>(lastYearAdditionalInsuredJson),
       'startDate': serializer.toJson<DateTime?>(startDate),
       'endDate': serializer.toJson<DateTime?>(endDate),
       'renewalDate': serializer.toJson<DateTime?>(renewalDate),
@@ -1070,6 +1413,19 @@ class Policy extends DataClass implements Insertable<Policy> {
           int? premiumCents,
           int? excessCents,
           int? sumInsuredCents,
+          bool? roadsideAssist,
+          bool? windscreenCover,
+          int? replacementValueCents,
+          int? buildingInsuredCents,
+          int? contentsInsuredCents,
+          String? additionalInsuredJson,
+          int? lastYearPremiumCents,
+          bool? lastYearRoadsideAssist,
+          bool? lastYearWindscreenCover,
+          int? lastYearReplacementValueCents,
+          int? lastYearBuildingInsuredCents,
+          int? lastYearContentsInsuredCents,
+          String? lastYearAdditionalInsuredJson,
           Value<DateTime?> startDate = const Value.absent(),
           Value<DateTime?> endDate = const Value.absent(),
           Value<DateTime?> renewalDate = const Value.absent(),
@@ -1089,6 +1445,27 @@ class Policy extends DataClass implements Insertable<Policy> {
         premiumCents: premiumCents ?? this.premiumCents,
         excessCents: excessCents ?? this.excessCents,
         sumInsuredCents: sumInsuredCents ?? this.sumInsuredCents,
+        roadsideAssist: roadsideAssist ?? this.roadsideAssist,
+        windscreenCover: windscreenCover ?? this.windscreenCover,
+        replacementValueCents:
+            replacementValueCents ?? this.replacementValueCents,
+        buildingInsuredCents: buildingInsuredCents ?? this.buildingInsuredCents,
+        contentsInsuredCents: contentsInsuredCents ?? this.contentsInsuredCents,
+        additionalInsuredJson:
+            additionalInsuredJson ?? this.additionalInsuredJson,
+        lastYearPremiumCents: lastYearPremiumCents ?? this.lastYearPremiumCents,
+        lastYearRoadsideAssist:
+            lastYearRoadsideAssist ?? this.lastYearRoadsideAssist,
+        lastYearWindscreenCover:
+            lastYearWindscreenCover ?? this.lastYearWindscreenCover,
+        lastYearReplacementValueCents:
+            lastYearReplacementValueCents ?? this.lastYearReplacementValueCents,
+        lastYearBuildingInsuredCents:
+            lastYearBuildingInsuredCents ?? this.lastYearBuildingInsuredCents,
+        lastYearContentsInsuredCents:
+            lastYearContentsInsuredCents ?? this.lastYearContentsInsuredCents,
+        lastYearAdditionalInsuredJson:
+            lastYearAdditionalInsuredJson ?? this.lastYearAdditionalInsuredJson,
         startDate: startDate.present ? startDate.value : this.startDate,
         endDate: endDate.present ? endDate.value : this.endDate,
         renewalDate: renewalDate.present ? renewalDate.value : this.renewalDate,
@@ -1121,6 +1498,45 @@ class Policy extends DataClass implements Insertable<Policy> {
       sumInsuredCents: data.sumInsuredCents.present
           ? data.sumInsuredCents.value
           : this.sumInsuredCents,
+      roadsideAssist: data.roadsideAssist.present
+          ? data.roadsideAssist.value
+          : this.roadsideAssist,
+      windscreenCover: data.windscreenCover.present
+          ? data.windscreenCover.value
+          : this.windscreenCover,
+      replacementValueCents: data.replacementValueCents.present
+          ? data.replacementValueCents.value
+          : this.replacementValueCents,
+      buildingInsuredCents: data.buildingInsuredCents.present
+          ? data.buildingInsuredCents.value
+          : this.buildingInsuredCents,
+      contentsInsuredCents: data.contentsInsuredCents.present
+          ? data.contentsInsuredCents.value
+          : this.contentsInsuredCents,
+      additionalInsuredJson: data.additionalInsuredJson.present
+          ? data.additionalInsuredJson.value
+          : this.additionalInsuredJson,
+      lastYearPremiumCents: data.lastYearPremiumCents.present
+          ? data.lastYearPremiumCents.value
+          : this.lastYearPremiumCents,
+      lastYearRoadsideAssist: data.lastYearRoadsideAssist.present
+          ? data.lastYearRoadsideAssist.value
+          : this.lastYearRoadsideAssist,
+      lastYearWindscreenCover: data.lastYearWindscreenCover.present
+          ? data.lastYearWindscreenCover.value
+          : this.lastYearWindscreenCover,
+      lastYearReplacementValueCents: data.lastYearReplacementValueCents.present
+          ? data.lastYearReplacementValueCents.value
+          : this.lastYearReplacementValueCents,
+      lastYearBuildingInsuredCents: data.lastYearBuildingInsuredCents.present
+          ? data.lastYearBuildingInsuredCents.value
+          : this.lastYearBuildingInsuredCents,
+      lastYearContentsInsuredCents: data.lastYearContentsInsuredCents.present
+          ? data.lastYearContentsInsuredCents.value
+          : this.lastYearContentsInsuredCents,
+      lastYearAdditionalInsuredJson: data.lastYearAdditionalInsuredJson.present
+          ? data.lastYearAdditionalInsuredJson.value
+          : this.lastYearAdditionalInsuredJson,
       startDate: data.startDate.present ? data.startDate.value : this.startDate,
       endDate: data.endDate.present ? data.endDate.value : this.endDate,
       renewalDate:
@@ -1146,6 +1562,23 @@ class Policy extends DataClass implements Insertable<Policy> {
           ..write('premiumCents: $premiumCents, ')
           ..write('excessCents: $excessCents, ')
           ..write('sumInsuredCents: $sumInsuredCents, ')
+          ..write('roadsideAssist: $roadsideAssist, ')
+          ..write('windscreenCover: $windscreenCover, ')
+          ..write('replacementValueCents: $replacementValueCents, ')
+          ..write('buildingInsuredCents: $buildingInsuredCents, ')
+          ..write('contentsInsuredCents: $contentsInsuredCents, ')
+          ..write('additionalInsuredJson: $additionalInsuredJson, ')
+          ..write('lastYearPremiumCents: $lastYearPremiumCents, ')
+          ..write('lastYearRoadsideAssist: $lastYearRoadsideAssist, ')
+          ..write('lastYearWindscreenCover: $lastYearWindscreenCover, ')
+          ..write(
+              'lastYearReplacementValueCents: $lastYearReplacementValueCents, ')
+          ..write(
+              'lastYearBuildingInsuredCents: $lastYearBuildingInsuredCents, ')
+          ..write(
+              'lastYearContentsInsuredCents: $lastYearContentsInsuredCents, ')
+          ..write(
+              'lastYearAdditionalInsuredJson: $lastYearAdditionalInsuredJson, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
           ..write('renewalDate: $renewalDate, ')
@@ -1158,25 +1591,39 @@ class Policy extends DataClass implements Insertable<Policy> {
   }
 
   @override
-  int get hashCode => Object.hash(
-      id,
-      profileId,
-      assetId,
-      insuranceType,
-      insurer,
-      insurerKey,
-      policyNumber,
-      policyType,
-      premiumCents,
-      excessCents,
-      sumInsuredCents,
-      startDate,
-      endDate,
-      renewalDate,
-      status,
-      notes,
-      createdAt,
-      updatedAt);
+  int get hashCode => Object.hashAll([
+        id,
+        profileId,
+        assetId,
+        insuranceType,
+        insurer,
+        insurerKey,
+        policyNumber,
+        policyType,
+        premiumCents,
+        excessCents,
+        sumInsuredCents,
+        roadsideAssist,
+        windscreenCover,
+        replacementValueCents,
+        buildingInsuredCents,
+        contentsInsuredCents,
+        additionalInsuredJson,
+        lastYearPremiumCents,
+        lastYearRoadsideAssist,
+        lastYearWindscreenCover,
+        lastYearReplacementValueCents,
+        lastYearBuildingInsuredCents,
+        lastYearContentsInsuredCents,
+        lastYearAdditionalInsuredJson,
+        startDate,
+        endDate,
+        renewalDate,
+        status,
+        notes,
+        createdAt,
+        updatedAt
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1192,6 +1639,23 @@ class Policy extends DataClass implements Insertable<Policy> {
           other.premiumCents == this.premiumCents &&
           other.excessCents == this.excessCents &&
           other.sumInsuredCents == this.sumInsuredCents &&
+          other.roadsideAssist == this.roadsideAssist &&
+          other.windscreenCover == this.windscreenCover &&
+          other.replacementValueCents == this.replacementValueCents &&
+          other.buildingInsuredCents == this.buildingInsuredCents &&
+          other.contentsInsuredCents == this.contentsInsuredCents &&
+          other.additionalInsuredJson == this.additionalInsuredJson &&
+          other.lastYearPremiumCents == this.lastYearPremiumCents &&
+          other.lastYearRoadsideAssist == this.lastYearRoadsideAssist &&
+          other.lastYearWindscreenCover == this.lastYearWindscreenCover &&
+          other.lastYearReplacementValueCents ==
+              this.lastYearReplacementValueCents &&
+          other.lastYearBuildingInsuredCents ==
+              this.lastYearBuildingInsuredCents &&
+          other.lastYearContentsInsuredCents ==
+              this.lastYearContentsInsuredCents &&
+          other.lastYearAdditionalInsuredJson ==
+              this.lastYearAdditionalInsuredJson &&
           other.startDate == this.startDate &&
           other.endDate == this.endDate &&
           other.renewalDate == this.renewalDate &&
@@ -1213,6 +1677,19 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
   final Value<int> premiumCents;
   final Value<int> excessCents;
   final Value<int> sumInsuredCents;
+  final Value<bool> roadsideAssist;
+  final Value<bool> windscreenCover;
+  final Value<int> replacementValueCents;
+  final Value<int> buildingInsuredCents;
+  final Value<int> contentsInsuredCents;
+  final Value<String> additionalInsuredJson;
+  final Value<int> lastYearPremiumCents;
+  final Value<bool> lastYearRoadsideAssist;
+  final Value<bool> lastYearWindscreenCover;
+  final Value<int> lastYearReplacementValueCents;
+  final Value<int> lastYearBuildingInsuredCents;
+  final Value<int> lastYearContentsInsuredCents;
+  final Value<String> lastYearAdditionalInsuredJson;
   final Value<DateTime?> startDate;
   final Value<DateTime?> endDate;
   final Value<DateTime?> renewalDate;
@@ -1232,6 +1709,19 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     this.premiumCents = const Value.absent(),
     this.excessCents = const Value.absent(),
     this.sumInsuredCents = const Value.absent(),
+    this.roadsideAssist = const Value.absent(),
+    this.windscreenCover = const Value.absent(),
+    this.replacementValueCents = const Value.absent(),
+    this.buildingInsuredCents = const Value.absent(),
+    this.contentsInsuredCents = const Value.absent(),
+    this.additionalInsuredJson = const Value.absent(),
+    this.lastYearPremiumCents = const Value.absent(),
+    this.lastYearRoadsideAssist = const Value.absent(),
+    this.lastYearWindscreenCover = const Value.absent(),
+    this.lastYearReplacementValueCents = const Value.absent(),
+    this.lastYearBuildingInsuredCents = const Value.absent(),
+    this.lastYearContentsInsuredCents = const Value.absent(),
+    this.lastYearAdditionalInsuredJson = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
     this.renewalDate = const Value.absent(),
@@ -1252,6 +1742,19 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     this.premiumCents = const Value.absent(),
     this.excessCents = const Value.absent(),
     this.sumInsuredCents = const Value.absent(),
+    this.roadsideAssist = const Value.absent(),
+    this.windscreenCover = const Value.absent(),
+    this.replacementValueCents = const Value.absent(),
+    this.buildingInsuredCents = const Value.absent(),
+    this.contentsInsuredCents = const Value.absent(),
+    this.additionalInsuredJson = const Value.absent(),
+    this.lastYearPremiumCents = const Value.absent(),
+    this.lastYearRoadsideAssist = const Value.absent(),
+    this.lastYearWindscreenCover = const Value.absent(),
+    this.lastYearReplacementValueCents = const Value.absent(),
+    this.lastYearBuildingInsuredCents = const Value.absent(),
+    this.lastYearContentsInsuredCents = const Value.absent(),
+    this.lastYearAdditionalInsuredJson = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
     this.renewalDate = const Value.absent(),
@@ -1274,6 +1777,19 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     Expression<int>? premiumCents,
     Expression<int>? excessCents,
     Expression<int>? sumInsuredCents,
+    Expression<bool>? roadsideAssist,
+    Expression<bool>? windscreenCover,
+    Expression<int>? replacementValueCents,
+    Expression<int>? buildingInsuredCents,
+    Expression<int>? contentsInsuredCents,
+    Expression<String>? additionalInsuredJson,
+    Expression<int>? lastYearPremiumCents,
+    Expression<bool>? lastYearRoadsideAssist,
+    Expression<bool>? lastYearWindscreenCover,
+    Expression<int>? lastYearReplacementValueCents,
+    Expression<int>? lastYearBuildingInsuredCents,
+    Expression<int>? lastYearContentsInsuredCents,
+    Expression<String>? lastYearAdditionalInsuredJson,
     Expression<DateTime>? startDate,
     Expression<DateTime>? endDate,
     Expression<DateTime>? renewalDate,
@@ -1294,6 +1810,30 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
       if (premiumCents != null) 'premium_cents': premiumCents,
       if (excessCents != null) 'excess_cents': excessCents,
       if (sumInsuredCents != null) 'sum_insured_cents': sumInsuredCents,
+      if (roadsideAssist != null) 'roadside_assist': roadsideAssist,
+      if (windscreenCover != null) 'windscreen_cover': windscreenCover,
+      if (replacementValueCents != null)
+        'replacement_value_cents': replacementValueCents,
+      if (buildingInsuredCents != null)
+        'building_insured_cents': buildingInsuredCents,
+      if (contentsInsuredCents != null)
+        'contents_insured_cents': contentsInsuredCents,
+      if (additionalInsuredJson != null)
+        'additional_insured_json': additionalInsuredJson,
+      if (lastYearPremiumCents != null)
+        'last_year_premium_cents': lastYearPremiumCents,
+      if (lastYearRoadsideAssist != null)
+        'last_year_roadside_assist': lastYearRoadsideAssist,
+      if (lastYearWindscreenCover != null)
+        'last_year_windscreen_cover': lastYearWindscreenCover,
+      if (lastYearReplacementValueCents != null)
+        'last_year_replacement_value_cents': lastYearReplacementValueCents,
+      if (lastYearBuildingInsuredCents != null)
+        'last_year_building_insured_cents': lastYearBuildingInsuredCents,
+      if (lastYearContentsInsuredCents != null)
+        'last_year_contents_insured_cents': lastYearContentsInsuredCents,
+      if (lastYearAdditionalInsuredJson != null)
+        'last_year_additional_insured_json': lastYearAdditionalInsuredJson,
       if (startDate != null) 'start_date': startDate,
       if (endDate != null) 'end_date': endDate,
       if (renewalDate != null) 'renewal_date': renewalDate,
@@ -1316,6 +1856,19 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
       Value<int>? premiumCents,
       Value<int>? excessCents,
       Value<int>? sumInsuredCents,
+      Value<bool>? roadsideAssist,
+      Value<bool>? windscreenCover,
+      Value<int>? replacementValueCents,
+      Value<int>? buildingInsuredCents,
+      Value<int>? contentsInsuredCents,
+      Value<String>? additionalInsuredJson,
+      Value<int>? lastYearPremiumCents,
+      Value<bool>? lastYearRoadsideAssist,
+      Value<bool>? lastYearWindscreenCover,
+      Value<int>? lastYearReplacementValueCents,
+      Value<int>? lastYearBuildingInsuredCents,
+      Value<int>? lastYearContentsInsuredCents,
+      Value<String>? lastYearAdditionalInsuredJson,
       Value<DateTime?>? startDate,
       Value<DateTime?>? endDate,
       Value<DateTime?>? renewalDate,
@@ -1335,6 +1888,27 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
       premiumCents: premiumCents ?? this.premiumCents,
       excessCents: excessCents ?? this.excessCents,
       sumInsuredCents: sumInsuredCents ?? this.sumInsuredCents,
+      roadsideAssist: roadsideAssist ?? this.roadsideAssist,
+      windscreenCover: windscreenCover ?? this.windscreenCover,
+      replacementValueCents:
+          replacementValueCents ?? this.replacementValueCents,
+      buildingInsuredCents: buildingInsuredCents ?? this.buildingInsuredCents,
+      contentsInsuredCents: contentsInsuredCents ?? this.contentsInsuredCents,
+      additionalInsuredJson:
+          additionalInsuredJson ?? this.additionalInsuredJson,
+      lastYearPremiumCents: lastYearPremiumCents ?? this.lastYearPremiumCents,
+      lastYearRoadsideAssist:
+          lastYearRoadsideAssist ?? this.lastYearRoadsideAssist,
+      lastYearWindscreenCover:
+          lastYearWindscreenCover ?? this.lastYearWindscreenCover,
+      lastYearReplacementValueCents:
+          lastYearReplacementValueCents ?? this.lastYearReplacementValueCents,
+      lastYearBuildingInsuredCents:
+          lastYearBuildingInsuredCents ?? this.lastYearBuildingInsuredCents,
+      lastYearContentsInsuredCents:
+          lastYearContentsInsuredCents ?? this.lastYearContentsInsuredCents,
+      lastYearAdditionalInsuredJson:
+          lastYearAdditionalInsuredJson ?? this.lastYearAdditionalInsuredJson,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       renewalDate: renewalDate ?? this.renewalDate,
@@ -1381,6 +1955,54 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
     if (sumInsuredCents.present) {
       map['sum_insured_cents'] = Variable<int>(sumInsuredCents.value);
     }
+    if (roadsideAssist.present) {
+      map['roadside_assist'] = Variable<bool>(roadsideAssist.value);
+    }
+    if (windscreenCover.present) {
+      map['windscreen_cover'] = Variable<bool>(windscreenCover.value);
+    }
+    if (replacementValueCents.present) {
+      map['replacement_value_cents'] =
+          Variable<int>(replacementValueCents.value);
+    }
+    if (buildingInsuredCents.present) {
+      map['building_insured_cents'] = Variable<int>(buildingInsuredCents.value);
+    }
+    if (contentsInsuredCents.present) {
+      map['contents_insured_cents'] = Variable<int>(contentsInsuredCents.value);
+    }
+    if (additionalInsuredJson.present) {
+      map['additional_insured_json'] =
+          Variable<String>(additionalInsuredJson.value);
+    }
+    if (lastYearPremiumCents.present) {
+      map['last_year_premium_cents'] =
+          Variable<int>(lastYearPremiumCents.value);
+    }
+    if (lastYearRoadsideAssist.present) {
+      map['last_year_roadside_assist'] =
+          Variable<bool>(lastYearRoadsideAssist.value);
+    }
+    if (lastYearWindscreenCover.present) {
+      map['last_year_windscreen_cover'] =
+          Variable<bool>(lastYearWindscreenCover.value);
+    }
+    if (lastYearReplacementValueCents.present) {
+      map['last_year_replacement_value_cents'] =
+          Variable<int>(lastYearReplacementValueCents.value);
+    }
+    if (lastYearBuildingInsuredCents.present) {
+      map['last_year_building_insured_cents'] =
+          Variable<int>(lastYearBuildingInsuredCents.value);
+    }
+    if (lastYearContentsInsuredCents.present) {
+      map['last_year_contents_insured_cents'] =
+          Variable<int>(lastYearContentsInsuredCents.value);
+    }
+    if (lastYearAdditionalInsuredJson.present) {
+      map['last_year_additional_insured_json'] =
+          Variable<String>(lastYearAdditionalInsuredJson.value);
+    }
     if (startDate.present) {
       map['start_date'] = Variable<DateTime>(startDate.value);
     }
@@ -1419,6 +2041,23 @@ class PoliciesCompanion extends UpdateCompanion<Policy> {
           ..write('premiumCents: $premiumCents, ')
           ..write('excessCents: $excessCents, ')
           ..write('sumInsuredCents: $sumInsuredCents, ')
+          ..write('roadsideAssist: $roadsideAssist, ')
+          ..write('windscreenCover: $windscreenCover, ')
+          ..write('replacementValueCents: $replacementValueCents, ')
+          ..write('buildingInsuredCents: $buildingInsuredCents, ')
+          ..write('contentsInsuredCents: $contentsInsuredCents, ')
+          ..write('additionalInsuredJson: $additionalInsuredJson, ')
+          ..write('lastYearPremiumCents: $lastYearPremiumCents, ')
+          ..write('lastYearRoadsideAssist: $lastYearRoadsideAssist, ')
+          ..write('lastYearWindscreenCover: $lastYearWindscreenCover, ')
+          ..write(
+              'lastYearReplacementValueCents: $lastYearReplacementValueCents, ')
+          ..write(
+              'lastYearBuildingInsuredCents: $lastYearBuildingInsuredCents, ')
+          ..write(
+              'lastYearContentsInsuredCents: $lastYearContentsInsuredCents, ')
+          ..write(
+              'lastYearAdditionalInsuredJson: $lastYearAdditionalInsuredJson, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
           ..write('renewalDate: $renewalDate, ')
@@ -2666,6 +3305,19 @@ typedef $$PoliciesTableCreateCompanionBuilder = PoliciesCompanion Function({
   Value<int> premiumCents,
   Value<int> excessCents,
   Value<int> sumInsuredCents,
+  Value<bool> roadsideAssist,
+  Value<bool> windscreenCover,
+  Value<int> replacementValueCents,
+  Value<int> buildingInsuredCents,
+  Value<int> contentsInsuredCents,
+  Value<String> additionalInsuredJson,
+  Value<int> lastYearPremiumCents,
+  Value<bool> lastYearRoadsideAssist,
+  Value<bool> lastYearWindscreenCover,
+  Value<int> lastYearReplacementValueCents,
+  Value<int> lastYearBuildingInsuredCents,
+  Value<int> lastYearContentsInsuredCents,
+  Value<String> lastYearAdditionalInsuredJson,
   Value<DateTime?> startDate,
   Value<DateTime?> endDate,
   Value<DateTime?> renewalDate,
@@ -2686,6 +3338,19 @@ typedef $$PoliciesTableUpdateCompanionBuilder = PoliciesCompanion Function({
   Value<int> premiumCents,
   Value<int> excessCents,
   Value<int> sumInsuredCents,
+  Value<bool> roadsideAssist,
+  Value<bool> windscreenCover,
+  Value<int> replacementValueCents,
+  Value<int> buildingInsuredCents,
+  Value<int> contentsInsuredCents,
+  Value<String> additionalInsuredJson,
+  Value<int> lastYearPremiumCents,
+  Value<bool> lastYearRoadsideAssist,
+  Value<bool> lastYearWindscreenCover,
+  Value<int> lastYearReplacementValueCents,
+  Value<int> lastYearBuildingInsuredCents,
+  Value<int> lastYearContentsInsuredCents,
+  Value<String> lastYearAdditionalInsuredJson,
   Value<DateTime?> startDate,
   Value<DateTime?> endDate,
   Value<DateTime?> renewalDate,
@@ -2736,6 +3401,58 @@ class $$PoliciesTableFilterComposer
 
   ColumnFilters<int> get sumInsuredCents => $composableBuilder(
       column: $table.sumInsuredCents,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get roadsideAssist => $composableBuilder(
+      column: $table.roadsideAssist,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get windscreenCover => $composableBuilder(
+      column: $table.windscreenCover,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get replacementValueCents => $composableBuilder(
+      column: $table.replacementValueCents,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get buildingInsuredCents => $composableBuilder(
+      column: $table.buildingInsuredCents,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get contentsInsuredCents => $composableBuilder(
+      column: $table.contentsInsuredCents,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get additionalInsuredJson => $composableBuilder(
+      column: $table.additionalInsuredJson,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get lastYearPremiumCents => $composableBuilder(
+      column: $table.lastYearPremiumCents,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get lastYearRoadsideAssist => $composableBuilder(
+      column: $table.lastYearRoadsideAssist,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get lastYearWindscreenCover => $composableBuilder(
+      column: $table.lastYearWindscreenCover,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get lastYearReplacementValueCents => $composableBuilder(
+      column: $table.lastYearReplacementValueCents,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get lastYearBuildingInsuredCents => $composableBuilder(
+      column: $table.lastYearBuildingInsuredCents,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get lastYearContentsInsuredCents => $composableBuilder(
+      column: $table.lastYearContentsInsuredCents,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get lastYearAdditionalInsuredJson => $composableBuilder(
+      column: $table.lastYearAdditionalInsuredJson,
       builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get startDate => $composableBuilder(
@@ -2806,6 +3523,59 @@ class $$PoliciesTableOrderingComposer
       column: $table.sumInsuredCents,
       builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<bool> get roadsideAssist => $composableBuilder(
+      column: $table.roadsideAssist,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get windscreenCover => $composableBuilder(
+      column: $table.windscreenCover,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get replacementValueCents => $composableBuilder(
+      column: $table.replacementValueCents,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get buildingInsuredCents => $composableBuilder(
+      column: $table.buildingInsuredCents,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get contentsInsuredCents => $composableBuilder(
+      column: $table.contentsInsuredCents,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get additionalInsuredJson => $composableBuilder(
+      column: $table.additionalInsuredJson,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get lastYearPremiumCents => $composableBuilder(
+      column: $table.lastYearPremiumCents,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get lastYearRoadsideAssist => $composableBuilder(
+      column: $table.lastYearRoadsideAssist,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get lastYearWindscreenCover => $composableBuilder(
+      column: $table.lastYearWindscreenCover,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get lastYearReplacementValueCents => $composableBuilder(
+      column: $table.lastYearReplacementValueCents,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get lastYearBuildingInsuredCents => $composableBuilder(
+      column: $table.lastYearBuildingInsuredCents,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get lastYearContentsInsuredCents => $composableBuilder(
+      column: $table.lastYearContentsInsuredCents,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get lastYearAdditionalInsuredJson =>
+      $composableBuilder(
+          column: $table.lastYearAdditionalInsuredJson,
+          builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get startDate => $composableBuilder(
       column: $table.startDate, builder: (column) => ColumnOrderings(column));
 
@@ -2870,6 +3640,48 @@ class $$PoliciesTableAnnotationComposer
   GeneratedColumn<int> get sumInsuredCents => $composableBuilder(
       column: $table.sumInsuredCents, builder: (column) => column);
 
+  GeneratedColumn<bool> get roadsideAssist => $composableBuilder(
+      column: $table.roadsideAssist, builder: (column) => column);
+
+  GeneratedColumn<bool> get windscreenCover => $composableBuilder(
+      column: $table.windscreenCover, builder: (column) => column);
+
+  GeneratedColumn<int> get replacementValueCents => $composableBuilder(
+      column: $table.replacementValueCents, builder: (column) => column);
+
+  GeneratedColumn<int> get buildingInsuredCents => $composableBuilder(
+      column: $table.buildingInsuredCents, builder: (column) => column);
+
+  GeneratedColumn<int> get contentsInsuredCents => $composableBuilder(
+      column: $table.contentsInsuredCents, builder: (column) => column);
+
+  GeneratedColumn<String> get additionalInsuredJson => $composableBuilder(
+      column: $table.additionalInsuredJson, builder: (column) => column);
+
+  GeneratedColumn<int> get lastYearPremiumCents => $composableBuilder(
+      column: $table.lastYearPremiumCents, builder: (column) => column);
+
+  GeneratedColumn<bool> get lastYearRoadsideAssist => $composableBuilder(
+      column: $table.lastYearRoadsideAssist, builder: (column) => column);
+
+  GeneratedColumn<bool> get lastYearWindscreenCover => $composableBuilder(
+      column: $table.lastYearWindscreenCover, builder: (column) => column);
+
+  GeneratedColumn<int> get lastYearReplacementValueCents => $composableBuilder(
+      column: $table.lastYearReplacementValueCents,
+      builder: (column) => column);
+
+  GeneratedColumn<int> get lastYearBuildingInsuredCents => $composableBuilder(
+      column: $table.lastYearBuildingInsuredCents, builder: (column) => column);
+
+  GeneratedColumn<int> get lastYearContentsInsuredCents => $composableBuilder(
+      column: $table.lastYearContentsInsuredCents, builder: (column) => column);
+
+  GeneratedColumn<String> get lastYearAdditionalInsuredJson =>
+      $composableBuilder(
+          column: $table.lastYearAdditionalInsuredJson,
+          builder: (column) => column);
+
   GeneratedColumn<DateTime> get startDate =>
       $composableBuilder(column: $table.startDate, builder: (column) => column);
 
@@ -2926,6 +3738,19 @@ class $$PoliciesTableTableManager extends RootTableManager<
             Value<int> premiumCents = const Value.absent(),
             Value<int> excessCents = const Value.absent(),
             Value<int> sumInsuredCents = const Value.absent(),
+            Value<bool> roadsideAssist = const Value.absent(),
+            Value<bool> windscreenCover = const Value.absent(),
+            Value<int> replacementValueCents = const Value.absent(),
+            Value<int> buildingInsuredCents = const Value.absent(),
+            Value<int> contentsInsuredCents = const Value.absent(),
+            Value<String> additionalInsuredJson = const Value.absent(),
+            Value<int> lastYearPremiumCents = const Value.absent(),
+            Value<bool> lastYearRoadsideAssist = const Value.absent(),
+            Value<bool> lastYearWindscreenCover = const Value.absent(),
+            Value<int> lastYearReplacementValueCents = const Value.absent(),
+            Value<int> lastYearBuildingInsuredCents = const Value.absent(),
+            Value<int> lastYearContentsInsuredCents = const Value.absent(),
+            Value<String> lastYearAdditionalInsuredJson = const Value.absent(),
             Value<DateTime?> startDate = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
             Value<DateTime?> renewalDate = const Value.absent(),
@@ -2946,6 +3771,19 @@ class $$PoliciesTableTableManager extends RootTableManager<
             premiumCents: premiumCents,
             excessCents: excessCents,
             sumInsuredCents: sumInsuredCents,
+            roadsideAssist: roadsideAssist,
+            windscreenCover: windscreenCover,
+            replacementValueCents: replacementValueCents,
+            buildingInsuredCents: buildingInsuredCents,
+            contentsInsuredCents: contentsInsuredCents,
+            additionalInsuredJson: additionalInsuredJson,
+            lastYearPremiumCents: lastYearPremiumCents,
+            lastYearRoadsideAssist: lastYearRoadsideAssist,
+            lastYearWindscreenCover: lastYearWindscreenCover,
+            lastYearReplacementValueCents: lastYearReplacementValueCents,
+            lastYearBuildingInsuredCents: lastYearBuildingInsuredCents,
+            lastYearContentsInsuredCents: lastYearContentsInsuredCents,
+            lastYearAdditionalInsuredJson: lastYearAdditionalInsuredJson,
             startDate: startDate,
             endDate: endDate,
             renewalDate: renewalDate,
@@ -2966,6 +3804,19 @@ class $$PoliciesTableTableManager extends RootTableManager<
             Value<int> premiumCents = const Value.absent(),
             Value<int> excessCents = const Value.absent(),
             Value<int> sumInsuredCents = const Value.absent(),
+            Value<bool> roadsideAssist = const Value.absent(),
+            Value<bool> windscreenCover = const Value.absent(),
+            Value<int> replacementValueCents = const Value.absent(),
+            Value<int> buildingInsuredCents = const Value.absent(),
+            Value<int> contentsInsuredCents = const Value.absent(),
+            Value<String> additionalInsuredJson = const Value.absent(),
+            Value<int> lastYearPremiumCents = const Value.absent(),
+            Value<bool> lastYearRoadsideAssist = const Value.absent(),
+            Value<bool> lastYearWindscreenCover = const Value.absent(),
+            Value<int> lastYearReplacementValueCents = const Value.absent(),
+            Value<int> lastYearBuildingInsuredCents = const Value.absent(),
+            Value<int> lastYearContentsInsuredCents = const Value.absent(),
+            Value<String> lastYearAdditionalInsuredJson = const Value.absent(),
             Value<DateTime?> startDate = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
             Value<DateTime?> renewalDate = const Value.absent(),
@@ -2986,6 +3837,19 @@ class $$PoliciesTableTableManager extends RootTableManager<
             premiumCents: premiumCents,
             excessCents: excessCents,
             sumInsuredCents: sumInsuredCents,
+            roadsideAssist: roadsideAssist,
+            windscreenCover: windscreenCover,
+            replacementValueCents: replacementValueCents,
+            buildingInsuredCents: buildingInsuredCents,
+            contentsInsuredCents: contentsInsuredCents,
+            additionalInsuredJson: additionalInsuredJson,
+            lastYearPremiumCents: lastYearPremiumCents,
+            lastYearRoadsideAssist: lastYearRoadsideAssist,
+            lastYearWindscreenCover: lastYearWindscreenCover,
+            lastYearReplacementValueCents: lastYearReplacementValueCents,
+            lastYearBuildingInsuredCents: lastYearBuildingInsuredCents,
+            lastYearContentsInsuredCents: lastYearContentsInsuredCents,
+            lastYearAdditionalInsuredJson: lastYearAdditionalInsuredJson,
             startDate: startDate,
             endDate: endDate,
             renewalDate: renewalDate,

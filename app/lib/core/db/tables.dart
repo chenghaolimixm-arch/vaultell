@@ -32,6 +32,21 @@ class Policies extends Table {
   IntColumn get premiumCents => integer().withDefault(const Constant(0))();
   IntColumn get excessCents => integer().withDefault(const Constant(0))();
   IntColumn get sumInsuredCents => integer().withDefault(const Constant(0))();
+  // Cover details (this year)
+  BoolColumn get roadsideAssist => boolean().withDefault(const Constant(false))();
+  BoolColumn get windscreenCover => boolean().withDefault(const Constant(false))();
+  IntColumn get replacementValueCents => integer().withDefault(const Constant(0))();
+  IntColumn get buildingInsuredCents => integer().withDefault(const Constant(0))();
+  IntColumn get contentsInsuredCents => integer().withDefault(const Constant(0))();
+  TextColumn get additionalInsuredJson => text().withDefault(const Constant('[]'))();
+  // Last year's policy snapshot (for year-over-year comparison)
+  IntColumn get lastYearPremiumCents => integer().withDefault(const Constant(0))();
+  BoolColumn get lastYearRoadsideAssist => boolean().withDefault(const Constant(false))();
+  BoolColumn get lastYearWindscreenCover => boolean().withDefault(const Constant(false))();
+  IntColumn get lastYearReplacementValueCents => integer().withDefault(const Constant(0))();
+  IntColumn get lastYearBuildingInsuredCents => integer().withDefault(const Constant(0))();
+  IntColumn get lastYearContentsInsuredCents => integer().withDefault(const Constant(0))();
+  TextColumn get lastYearAdditionalInsuredJson => text().withDefault(const Constant('[]'))();
   DateTimeColumn get startDate => dateTime().nullable()();
   DateTimeColumn get endDate => dateTime().nullable()(); // policy expiry date
   DateTimeColumn get renewalDate => dateTime().nullable()(); // legacy, unused by UI
