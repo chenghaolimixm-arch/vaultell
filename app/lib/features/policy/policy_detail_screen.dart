@@ -1,5 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/db/app_database.dart';
@@ -378,7 +379,12 @@ class _DocumentsSection extends StatelessWidget {
                     leading: const Icon(Icons.description_outlined),
                     title: Text(doc.fileName, maxLines: 1, overflow: TextOverflow.ellipsis),
                     subtitle: Text(doc.kind),
-                    trailing: const Icon(Icons.folder, size: 20),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete_outline),
+                      tooltip: 'Delete file',
+                      onPressed: () => _confirmDelete(context, doc),
+                    ),
+                    onTap: () => OpenFilex.open(doc.localPath),
                   ),
               ],
             ),
@@ -386,6 +392,28 @@ class _DocumentsSection extends StatelessWidget {
         );
       },
     );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, Document doc) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete file?'),
+        content: Text('Remove "${doc.fileName}" from this device?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Delete')),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+    await database.policyDao.deleteDocument(doc.id);
+    await DocumentStorageService().deleteStoredFile(doc.localPath);
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('File deleted')),
+      );
+    }
   }
 }
 

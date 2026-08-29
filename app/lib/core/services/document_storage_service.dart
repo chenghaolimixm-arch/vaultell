@@ -16,4 +16,15 @@ class DocumentStorageService {
     await File(sourcePath).copy(targetPath);
     return targetPath;
   }
+
+  Future<void> deleteStoredFile(String localPath) async {
+    try {
+      final file = File(localPath);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (_) {
+      // Missing/corrupt file should not block removing the record.
+    }
+  }
 }

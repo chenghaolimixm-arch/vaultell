@@ -42,6 +42,16 @@ class PolicyDao extends DatabaseAccessor<AppDatabase> with _$PolicyDaoMixin {
   Future<List<Policy>> allActivePolicies() =>
       (select(policies)..where((t) => t.status.equals('active'))).get();
 
+  Future<List<Profile>> allProfiles() => select(profiles).get();
+
+  Future<List<Asset>> allAssets() => select(assets).get();
+
+  Future<List<Policy>> allPoliciesForBackup() => select(policies).get();
+
+  Future<List<Quote>> allQuotes() => select(quotes).get();
+
+  Future<List<Document>> allDocuments() => select(documents).get();
+
   /// Inserts a policy, enforcing the "one active health policy" rule.
   Future<Policy> insertPolicy({
     required InsuranceType type,
@@ -175,6 +185,132 @@ class PolicyDao extends DatabaseAccessor<AppDatabase> with _$PolicyDaoMixin {
 
   Future<void> deletePolicy(int id) async {
     await (delete(policies)..where((t) => t.id.equals(id))).go();
+  }
+
+  Future<void> deleteDocument(int id) async {
+    await (delete(documents)..where((t) => t.id.equals(id))).go();
+  }
+
+  Future<void> deleteAllData() async {
+    await delete(documents).go();
+    await delete(quotes).go();
+    await delete(policies).go();
+    await delete(assets).go();
+    await delete(profiles).go();
+  }
+
+  /// Replaces all local data with the given rows, preserving original IDs so
+  /// foreign keys stay consistent. Used by backup restore.
+  Future<void> restoreAll({
+    required List<Profile> profiles,
+    required List<Asset> assets,
+    required List<Policy> policies,
+    required List<Quote> quotes,
+    required List<Document> documents,
+  }) async {
+    await transaction(() async {
+      await deleteAllData();
+      await batch((b) {
+        b.insertAll(
+          this.profiles,
+          profiles.map(
+            (p) => ProfilesCompanion.insert(
+              id: Value(p.id),
+              displayName: Value(p.displayName),
+              createdAt: Value(p.createdAt),
+            ),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
+        b.insertAll(
+          this.assets,
+          assets.map(
+            (a) => AssetsCompanion.insert(
+              id: Value(a.id),
+              profileId: a.profileId,
+              type: a.type,
+              name: a.name,
+              detailsJson: Value(a.detailsJson),
+              createdAt: Value(a.createdAt),
+              updatedAt: Value(a.updatedAt),
+            ),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
+        b.insertAll(
+          this.policies,
+          policies.map(
+            (p) => PoliciesCompanion.insert(
+              id: Value(p.id),
+              profileId: p.profileId,
+              assetId: Value(p.assetId),
+              insuranceType: p.insuranceType,
+              insurer: p.insurer,
+              insurerKey: Value(p.insurerKey),
+              policyNumber: Value(p.policyNumber),
+              policyType: Value(p.policyType),
+              premiumCents: Value(p.premiumCents),
+              excessCents: Value(p.excessCents),
+              sumInsuredCents: Value(p.sumInsuredCents),
+              roadsideAssist: Value(p.roadsideAssist),
+              windscreenCover: Value(p.windscreenCover),
+              replacementValueCents: Value(p.replacementValueCents),
+              buildingInsuredCents: Value(p.buildingInsuredCents),
+              contentsInsuredCents: Value(p.contentsInsuredCents),
+              additionalInsuredJson: Value(p.additionalInsuredJson),
+              lastYearPremiumCents: Value(p.lastYearPremiumCents),
+              lastYearRoadsideAssist: Value(p.lastYearRoadsideAssist),
+              lastYearWindscreenCover: Value(p.lastYearWindscreenCover),
+              lastYearReplacementValueCents: Value(p.lastYearReplacementValueCents),
+              lastYearBuildingInsuredCents: Value(p.lastYearBuildingInsuredCents),
+              lastYearContentsInsuredCents: Value(p.lastYearContentsInsuredCents),
+              lastYearAdditionalInsuredJson: Value(p.lastYearAdditionalInsuredJson),
+              startDate: Value(p.startDate),
+              endDate: Value(p.endDate),
+              renewalDate: Value(p.renewalDate),
+              status: Value(p.status),
+              notes: Value(p.notes),
+              createdAt: Value(p.createdAt),
+              updatedAt: Value(p.updatedAt),
+            ),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
+        b.insertAll(
+          this.quotes,
+          quotes.map(
+            (q) => QuotesCompanion.insert(
+              id: Value(q.id),
+              policyId: q.policyId,
+              insurer: q.insurer,
+              premiumCents: Value(q.premiumCents),
+              excessCents: Value(q.excessCents),
+              sumInsuredCents: Value(q.sumInsuredCents),
+              coverSummary: Value(q.coverSummary),
+              isMock: Value(q.isMock),
+              sourceFile: Value(q.sourceFile),
+              createdAt: Value(q.createdAt),
+            ),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
+        b.insertAll(
+          this.documents,
+          documents.map(
+            (d) => DocumentsCompanion.insert(
+              id: Value(d.id),
+              policyId: d.policyId,
+              kind: Value(d.kind),
+              fileName: d.fileName,
+              localPath: d.localPath,
+              extractedJson: Value(d.extractedJson),
+              createdAt: Value(d.createdAt),
+            ),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
+      });
+    });
   }
 
   // ---- Quotes -------------------------------------------------------------

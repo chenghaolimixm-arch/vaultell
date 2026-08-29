@@ -1,7 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../core/db/app_database.dart';
 import '../../core/services/app_lock_service.dart';
+import '../../core/services/backup_service.dart';
+import '../../core/services/notification_service.dart';
 import 'disclaimers_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -55,6 +63,79 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  Future<void> _exportBackup() async {
+    final json = await BackupService.export(widget.database);
+    final bytes = Uint8List.fromList(utf8.encode(json));
+    await SharePlus.instance.share(
+      ShareParams(
+        files: [
+          XFile.fromData(
+            bytes,
+            mimeType: 'application/json',
+            name: 'insurance_profile_backup.json',
+          ),
+        ],
+        text: 'Insurance Profile backup',
+      ),
+    );
+  }
+
+  Future<void> _importBackup() async {
+    final picked = await FilePicker.pickFile(
+      type: FileType.custom,
+      allowedExtensions: ['json'],
+    );
+    if (picked == null || picked.path == null || !mounted) return;
+
+    String source;
+    try {
+      source = await File(picked.path!).readAsString();
+      BackupService.decode(source); // validate before asking to wipe data
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Invalid backup file: $e')),
+      );
+      return;
+    }
+
+    if (!mounted) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Restore backup?'),
+        content: const Text(
+          'This replaces all current data on this device with the backup contents. '
+          'This cannot be undone.',
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+          FilledButton(onPressed: () => Navigator.pop(context, true), child: const Text('Restore')),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    try {
+      final policyCount = await BackupService.restore(widget.database, source);
+      try {
+        final active = await widget.database.policyDao.allActivePolicies();
+        await NotificationService.instance.resyncAll(active);
+      } catch (_) {
+        // Notifications are best-effort on restore.
+      }
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Backup restored ($policyCount policies).')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Restore failed: $e')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,6 +166,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 style: TextStyle(fontSize: 12, color: Colors.grey),
               ),
             ),
+          const Divider(),
+          const ListTile(
+            leading: Icon(Icons.backup_outlined),
+            title: Text('Backup & Restore'),
+            subtitle: Text('Export or restore all local data'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.upload_file_outlined),
+            title: const Text('Export backup'),
+            subtitle: const Text('Share/save a JSON file with all your policies'),
+            onTap: _exportBackup,
+          ),
+          ListTile(
+            leading: const Icon(Icons.restore_outlined),
+            title: const Text('Import backup'),
+            subtitle: const Text('Replace current data with a backup file'),
+            onTap: _importBackup,
+          ),
           const ListTile(
             leading: Icon(Icons.info_outline),
             title: Text('About'),

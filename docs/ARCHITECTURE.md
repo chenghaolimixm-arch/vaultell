@@ -23,6 +23,7 @@
 │  └─ policy_extraction_service│ PDF 文本/图片 OCR + 规则提取
 │  └─ notification_service     │ 到期前 37 天本地通知（flutter_local_notifications）
 │  └─ app_lock_service         │ App 锁偏好持久化（shared_preferences）+ 生物识别/密码验证
+│  └─ backup_service           │ 全量数据导出/导入 JSON（open_filex 打开文件、share_plus 分享）
 │                            │
 │  本地文件（path_provider）  │
 │  └─ documents/ 保单文件     │
@@ -121,6 +122,14 @@ documents
   检查开关，开启则先显示锁屏，验证生物识别或设备密码后才进入主界面。
 - 设置页「Privacy & Disclaimers」打开独立页面：本地存储说明、非保险建议声明、
   mock 报价声明、健康信息敏感声明等（上架所需的隐私政策底稿）。
+
+## 4.10 文档管理与本地备份
+
+- 保单文件可点击打开（`open_filex`）、可删除（同时删除本地文件与数据库记录）。
+- 「Export backup」导出全部结构化数据（profiles/assets/policies/quotes/documents）
+  为 JSON 并通过系统分享保存；「Import backup」校验后整库替换恢复，恢复后自动重排到期提醒。
+- 备份文件不含文档二进制本身（仅保留文件名/路径元数据），文件可重新上传；
+  未来可升级为加密 ZIP 备份（端到端加密）。
 
 ## 4.5 保险公司目录与理赔跳转
 
