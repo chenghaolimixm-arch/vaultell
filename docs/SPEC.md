@@ -80,10 +80,20 @@ Profile（本地档案）
 
 ## 6. 报价对比 UX
 
+> ⚠️ **合规提示（2026-08-29）**：澳洲《公司法》下，任何「排序（最便宜/最优）、评分、
+> 推荐」都构成**金融产品建议（financial product advice）**；即使是 **general advice**
+> 也需要持有 AFSL 或作为持牌保险公司的授权代表（authorised representative）才能提供，
+> 并须附一般建议警告（s 949A）与 FSG 披露。结合用户档案做推荐更可能构成 **personal advice**
+> （义务更重）。因此本 App 当前**只做信息展示，不做排名、评分或推荐**；是否加入排序/评分
+> 功能，必须先完成保险合规律师评审并确定持牌/授权结构。
+
 - 不按价格单一排序。
-- 展示维度：Cheapest / Lowest Excess / Best Cover-Value / Current Policy。
+- 信息展示维度（无意见表达）：Current Policy + 用户自己录入/上传的报价，并排展示事实字段。
 - 明确展示保额、excess、主要保障项、可选附加、主要除外责任差异。
 - **所有 mock 报价必须标注"示例数据，非真实报价"**。
+
+> 原设计的 Cheapest / Lowest Excess / Best Cover-Value 排序与「Best Cover/Value」评分，
+> **暂停开发**，待合规评审后另行决定（见 ROADMAP 决策记录）。
 
 ## 6.1 去年 vs 今年对比（年度续保场景）
 
