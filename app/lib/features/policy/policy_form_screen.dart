@@ -5,6 +5,7 @@ import '../../core/db/app_database.dart';
 import '../../core/models/insurance_type.dart';
 import '../../core/models/insurer_catalog.dart';
 import '../../core/services/document_storage_service.dart';
+import '../../core/services/notification_service.dart';
 import '../../core/services/policy_extraction_service.dart';
 import '../../core/utils/formatters.dart';
 
@@ -183,6 +184,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
           assetName: widget.type.subjectType == null ? null : _assetName.text,
         );
         await _savePendingDocument(created.id);
+        await _syncNotification(created.id);
       } else {
         await widget.database.policyDao.updatePolicy(
           widget.policy!.id,
@@ -199,6 +201,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
           notes: _notes.text.trim(),
         );
         await _savePendingDocument(widget.policy!.id);
+        await _syncNotification(widget.policy!.id);
       }
       if (mounted) Navigator.of(context).pop();
     } on StateError catch (e) {
@@ -208,6 +211,19 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
     } finally {
       if (mounted) setState(() => _saving = false);
     }
+  }
+
+  Future<void> _syncNotification(int policyId) async {
+    final expiry = _expiryDate;
+    if (expiry == null) {
+      await NotificationService.instance.cancelForPolicy(policyId);
+      return;
+    }
+    await NotificationService.instance.scheduleExpiryReminder(
+      policyId: policyId,
+      insurer: _resolvedInsurerName,
+      expiryDate: expiry,
+    );
   }
 
   Future<void> _savePendingDocument(int policyId) async {

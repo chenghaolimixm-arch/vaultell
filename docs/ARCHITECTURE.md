@@ -21,6 +21,7 @@
 │  服务层（core/services）     │
 │  ├─ document_storage_service │ 文件保存到本机私有目录
 │  └─ policy_extraction_service│ PDF 文本/图片 OCR + 规则提取
+│  └─ notification_service     │ 到期前 37 天本地通知（flutter_local_notifications）
 │                            │
 │  本地文件（path_provider）  │
 │  └─ documents/ 保单文件     │
@@ -92,6 +93,13 @@ documents
 - `PolicyDataExtractor`（纯 Dart，可单测）：从文字提取字段的规则引擎。
 - `LocalPolicyExtractionService`：PDF/图片 → 文字 → 结构化字段，全设备端。
 - 后续云端 AI 提取实现同一接口，逐份授权后插拔。
+
+## 4.7 到期提醒
+
+- 保单保存时，若填写了 Policy Expiry Date，则在**到期前 37 天上午 9 点**触发一条本地通知。
+- 保险公司通常提前 30 天发续保邮件，37 天提醒为用户留出一周比较时间。
+- 删除保单会取消对应通知；App 启动时会根据当前所有有效保单重排通知（`resyncAll`）。
+- 通知完全在设备端调度（`flutter_local_notifications` + `timezone`），无服务器、无推送服务。
 
 ## 4.5 保险公司目录与理赔跳转
 

@@ -6,6 +6,7 @@ import '../../core/db/app_database.dart';
 import '../../core/models/insurance_type.dart';
 import '../../core/models/insurer_catalog.dart';
 import '../../core/services/document_storage_service.dart';
+import '../../core/services/notification_service.dart';
 import '../../core/utils/formatters.dart';
 import '../comparison/comparison_screen.dart';
 import 'policy_form_screen.dart';
@@ -167,6 +168,7 @@ class PolicyDetailScreen extends StatelessWidget {
                         );
                         if (confirmed == true) {
                           await database.policyDao.deletePolicy(policyId);
+                          await NotificationService.instance.cancelForPolicy(policyId);
                           if (context.mounted) Navigator.of(context).pop();
                         }
                       },

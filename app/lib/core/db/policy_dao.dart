@@ -39,6 +39,9 @@ class PolicyDao extends DatabaseAccessor<AppDatabase> with _$PolicyDaoMixin {
             ))
           .get();
 
+  Future<List<Policy>> allActivePolicies() =>
+      (select(policies)..where((t) => t.status.equals('active'))).get();
+
   /// Inserts a policy, enforcing the "one active health policy" rule.
   Future<Policy> insertPolicy({
     required InsuranceType type,
