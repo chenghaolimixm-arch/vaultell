@@ -67,5 +67,6 @@
 - [产品规格](docs/SPEC.md)
 - [架构设计](docs/ARCHITECTURE.md)
 - [隐私与安全](docs/PRIVACY.md)
+- [完整隐私政策（英文，商店用）](docs/PRIVACY_POLICY.md)
 - [路线图](docs/ROADMAP.md)
 - [上架发布指南](docs/PUBLISHING.md)
