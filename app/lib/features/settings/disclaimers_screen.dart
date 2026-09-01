@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Privacy statement and legal disclaimers shown to users.
 class DisclaimersScreen extends StatelessWidget {
@@ -11,6 +12,7 @@ class DisclaimersScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: const [
+          _FullPolicyLink(),
           _Section(
             title: 'Your data stays on your device',
             body:
@@ -53,6 +55,25 @@ class DisclaimersScreen extends StatelessWidget {
                 'a qualified professional.',
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _FullPolicyLink extends StatelessWidget {
+  const _FullPolicyLink();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: OutlinedButton.icon(
+        icon: const Icon(Icons.open_in_new),
+        label: const Text('Read the full privacy policy'),
+        onPressed: () async {
+          final uri = Uri.parse('https://stalwart-cobbler-3bf933.netlify.app/');
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        },
       ),
     );
   }

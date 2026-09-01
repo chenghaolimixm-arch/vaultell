@@ -6,6 +6,8 @@ This Privacy Policy explains how the Insurance Profile mobile application ("the 
 
 Please read this policy together with the in-app **Privacy & Disclaimers** page. This App does not provide financial, insurance, legal or tax advice and is not a licensed financial services provider.
 
+**Hosted version:** https://stalwart-cobbler-3bf933.netlify.app/
+
 ---
 
 ## 1. Who is responsible for your information
