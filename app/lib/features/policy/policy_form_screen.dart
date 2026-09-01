@@ -303,7 +303,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
 
   Future<void> _syncNotification(int policyId) async {
     final expiry = _expiryDate;
-    if (expiry == null) {
+    if (_status != 'active' || expiry == null) {
       await NotificationService.instance.cancelForPolicy(policyId);
       return;
     }

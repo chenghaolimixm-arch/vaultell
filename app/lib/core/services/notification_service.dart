@@ -6,28 +6,33 @@ import 'package:timezone/timezone.dart' as tz;
 
 import '../db/app_database.dart';
 
-/// Schedules a single local reminder 37 days before a policy expires.
+/// Schedules local reminders at 30, 15, 7 and 3 days before a policy expires.
 ///
-/// Insurers typically send renewal emails ~30 days before expiry; the extra
-/// week gives the user time to review options. Everything is on-device.
+/// Reminders are re-scheduled whenever the policy is updated (for example
+/// after renewal) and cancelled when the policy is deleted or no longer
+/// active. Everything is on-device.
 class NotificationService {
   NotificationService._();
 
   static final NotificationService instance = NotificationService._();
 
-  static const int daysBeforeExpiry = 37;
+  static const List<int> reminderDays = [30, 15, 7, 3];
 
   final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
   bool _initialized = false;
 
-  /// Pure date math (unit-testable): 37 days before [expiry] at 09:00 local.
-  static DateTime reminderDateFor(DateTime expiry) {
+  /// Pure date math (unit-testable): [daysBefore] days before [expiry] at
+  /// 09:00 local time.
+  static DateTime reminderDateFor(DateTime expiry, int daysBefore) {
     final date = DateTime(expiry.year, expiry.month, expiry.day)
-        .subtract(const Duration(days: daysBeforeExpiry));
+        .subtract(Duration(days: daysBefore));
     return DateTime(date.year, date.month, date.day, 9);
   }
 
   static bool shouldSchedule(DateTime reminder, DateTime now) => reminder.isAfter(now);
+
+  /// Stable unique notification id for one reminder of a policy.
+  static int notificationIdFor(int policyId, int index) => policyId * 10 + index;
 
   Future<void> init() async {
     if (_initialized) return;
@@ -56,12 +61,8 @@ class NotificationService {
     required DateTime expiryDate,
   }) async {
     await init();
-    await _plugin.cancel(id: policyId);
+    await cancelForPolicy(policyId);
 
-    final reminder = reminderDateFor(expiryDate);
-    if (!shouldSchedule(reminder, DateTime.now())) return;
-
-    final scheduledAt = tz.TZDateTime.from(reminder, tz.local);
     const details = NotificationDetails(
       android: AndroidNotificationDetails(
         'policy_expiry',
@@ -73,19 +74,29 @@ class NotificationService {
       iOS: DarwinNotificationDetails(),
     );
 
-    await _plugin.zonedSchedule(
-      id: policyId,
-      title: 'Policy expiry reminder',
-      body: '$insurer expires on ${DateFormat('dd MMM yyyy', 'en_US').format(expiryDate)}',
-      scheduledDate: scheduledAt,
-      notificationDetails: details,
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
-    );
+    final now = DateTime.now();
+    final expiryText = DateFormat('dd MMM yyyy', 'en_US').format(expiryDate);
+    for (var i = 0; i < reminderDays.length; i++) {
+      final days = reminderDays[i];
+      final reminder = reminderDateFor(expiryDate, days);
+      if (!shouldSchedule(reminder, now)) continue;
+
+      await _plugin.zonedSchedule(
+        id: notificationIdFor(policyId, i),
+        title: days == 1 ? 'Policy expires tomorrow' : 'Policy expires in $days days',
+        body: '$insurer expires on $expiryText',
+        scheduledDate: tz.TZDateTime.from(reminder, tz.local),
+        notificationDetails: details,
+        androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      );
+    }
   }
 
   Future<void> cancelForPolicy(int policyId) async {
     if (!_initialized) return;
-    await _plugin.cancel(id: policyId);
+    for (var i = 0; i < reminderDays.length; i++) {
+      await _plugin.cancel(id: notificationIdFor(policyId, i));
+    }
   }
 
   Future<void> resyncAll(Iterable<Policy> policies) async {
