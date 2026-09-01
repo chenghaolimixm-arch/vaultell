@@ -42,7 +42,7 @@ EOF
       flutter: stable
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: au.com.insuranceprofile.insurance_profile_app
+        bundle_identifier: au.com.insuranceprofile.insuranceProfileApp
       groups:
         - appstore_credentials
     scripts:
