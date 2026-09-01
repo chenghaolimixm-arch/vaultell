@@ -68,5 +68,8 @@
 - [架构设计](docs/ARCHITECTURE.md)
 - [隐私与安全](docs/PRIVACY.md)
 - [完整隐私政策（英文，商店用）](docs/PRIVACY_POLICY.md)
+- [商店文案与截图方案](docs/STORE_LISTING.md)
+- [隐私标签/数据安全表单答案](docs/PRIVACY_LABELS.md)
+- [云构建指南（Codemagic / GitHub Actions）](docs/CLOUD_BUILD.md)
 - [路线图](docs/ROADMAP.md)
 - [上架发布指南](docs/PUBLISHING.md)

@@ -1,0 +1,35 @@
+name: Build iOS (TestFlight)
+
+on:
+  workflow_dispatch:
+
+# Requires iOS code signing to be configured first (certificates/profiles via
+# fastlane match, or Xcode automatic signing with exported certs). Secrets:
+# APPLE_ID, APPLE_APP_SPECIFIC_PASSWORD, and the App Store Connect API key
+# saved at .github/appstore_api_key.json.
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.1"
+          channel: stable
+      - name: Get packages
+        working-directory: app
+        run: flutter pub get
+      - name: Build IPA
+        working-directory: app
+        run: flutter build ipa --release
+      - name: Upload to TestFlight
+        working-directory: app
+        run: |
+          brew install fastlane
+          fastlane run upload_to_testflight \
+            api_key_path:../.github/appstore_api_key.json \
+            ipa:build/ios/ipa/*.ipa \
+            app_identifier:au.com.insuranceprofile.insurance_profile_app
+        env:
+          FASTLANE_USER: ${{ secrets.APPLE_ID }}
+          FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}

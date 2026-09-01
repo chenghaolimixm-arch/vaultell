@@ -1,0 +1,60 @@
+workflows:
+  android-build:
+    name: Android Build (AAB + APK)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      groups:
+        - android_signing
+    scripts:
+      - name: Set up Android release signing
+        script: |
+          cd app
+          if [ -n "$ANDROID_KEYSTORE_BASE64" ]; then
+            echo "$ANDROID_KEYSTORE_BASE64" | base64 --decode > keystore.jks
+            cat > key.properties <<EOF
+storeFile=keystore.jks
+storePassword=$ANDROID_KEYSTORE_PASSWORD
+keyAlias=$ANDROID_KEY_ALIAS
+keyPassword=$ANDROID_KEY_PASSWORD
+EOF
+          fi
+      - name: Get packages
+        script: cd app && flutter pub get
+      - name: Build release AAB
+        script: cd app && flutter build appbundle --release
+      - name: Build release APK
+        script: cd app && flutter build apk --release
+    artifacts:
+      - app/build/app/outputs/**/*.aab
+      - app/build/app/outputs/**/*.apk
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+
+  ios-build:
+    name: iOS Build (TestFlight)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    environment:
+      flutter: stable
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: au.com.insuranceprofile.insurance_profile_app
+      groups:
+        - appstore_credentials
+    scripts:
+      - name: Get packages
+        script: cd app && flutter pub get
+      - name: Build iOS release
+        script: cd app && flutter build ipa --release
+    artifacts:
+      - app/build/ios/ipa/*.ipa
+    publishing:
+      app_store_connect:
+        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        key_id: $APP_STORE_CONNECT_KEY_IDENTIFIER
+        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+        submit_to_testflight: true
