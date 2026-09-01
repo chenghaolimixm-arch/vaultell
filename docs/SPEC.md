@@ -1,4 +1,4 @@
-# Insurance Profile App — 产品规格
+# Vaultell — 产品规格
 
 版本：v0.2（2026-08-27） · 基于 ChatGPT 对话共识修订
 

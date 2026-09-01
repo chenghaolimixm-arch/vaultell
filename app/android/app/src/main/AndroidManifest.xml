@@ -7,7 +7,7 @@
         </intent>
     </queries>
     <application
-        android:label="Insurance Profile"
+        android:label="Vaultell"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

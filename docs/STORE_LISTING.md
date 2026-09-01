@@ -1,4 +1,4 @@
-# Store Listing — Insurance Profile
+# Store Listing — Vaultell
 
 英文商店文案，直接用于 App Store / Google Play 发布。
 方括号内容需要你在发布前替换。
@@ -7,7 +7,7 @@
 
 | 项目 | 值 |
 |---|---|
-| App 名称 | **Insurance Profile** |
+| App 名称 | **Vaultell** |
 | App Store 副标题 | Your policies. On your device. |
 | 分类 | Finance（两个平台都用 Finance） |
 | 支持地区 | 澳大利亚（可后扩） |
@@ -26,9 +26,9 @@
 
 ## 完整描述（两平台通用）
 
-### Insurance Profile — your policies, all in one place
+### Vaultell — your policies, all in one place
 
-Insurance Profile is a private, local-first insurance wallet for Australia. It helps you
+Vaultell is a private, local-first insurance wallet for Australia. It helps you
 keep track of every policy — car, home, landlord, health and pet — in one place, and
 never miss a renewal again.
 
@@ -70,7 +70,7 @@ Jump straight to your insurer's official claims page from the policy details scr
 - Optional biometric App Lock
 - Export and restore your own backup anytime
 
-Insurance Profile is an information and record-keeping tool. It does not provide
+Vaultell is an information and record-keeping tool. It does not provide
 insurance advice or recommendations. All quote figures shown in the app are example
 data unless sourced from documents you provided. Always review your policy's Product
 Disclosure Statement before making decisions.

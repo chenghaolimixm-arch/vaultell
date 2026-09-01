@@ -1,4 +1,4 @@
-"""Generate concept mockups for the Insurance Profile app icon and launch screen.
+"""Generate concept mockups for the Vaultell app icon and launch screen.
 
 Run:  python generate_concepts.py
 Outputs PNG files in the same folder (for design review, not final assets).
@@ -568,7 +568,7 @@ def make_launch():
 
     title = ImageFont.truetype(FONT_TITLE, 72)
     body = ImageFont.truetype(FONT_BODY, 40)
-    name = "Insurance Profile"
+    name = "Vaultell"
     tag = "Your policies. On your device."
     nw = d.textlength(name, font=title)
     tw = d.textlength(tag, font=body)

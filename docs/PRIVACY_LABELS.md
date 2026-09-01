@@ -13,7 +13,7 @@
 
 说明文字（可附在表单里）：
 
-> Insurance Profile is a local-first app. All data entered by the user is stored only
+> Vaultell is a local-first app. All data entered by the user is stored only
 > on the user's device. The app does not collect, transmit or share any personal data,
 > and does not include advertising, analytics or tracking SDKs.
 

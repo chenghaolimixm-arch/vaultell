@@ -29,7 +29,7 @@ class AppLockService {
     final auth = LocalAuthentication();
     try {
       return await auth.authenticate(
-        localizedReason: 'Unlock Insurance Profile App',
+        localizedReason: 'Unlock Vaultell',
         options: const AuthenticationOptions(
           biometricOnly: false,
           stickyAuth: true,

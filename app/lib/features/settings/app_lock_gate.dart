@@ -64,7 +64,7 @@ class _AppLockGateState extends State<AppLockGate> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Insurance Profile',
+                    'Vaultell',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 8),

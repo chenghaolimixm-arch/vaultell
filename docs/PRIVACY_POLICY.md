@@ -1,8 +1,8 @@
-# Privacy Policy — Insurance Profile App
+# Privacy Policy — Vaultell App
 
 **Effective date:** 1 September 2026
 
-This Privacy Policy explains how the Insurance Profile mobile application ("the App", "we", "us") handles your information. The App is designed to be **local-first**: your policy information is stored on your own device and is not uploaded to any server.
+This Privacy Policy explains how the Vaultell mobile application ("the App", "we", "us") handles your information. The App is designed to be **local-first**: your policy information is stored on your own device and is not uploaded to any server.
 
 Please read this policy together with the in-app **Privacy & Disclaimers** page. This App does not provide financial, insurance, legal or tax advice and is not a licensed financial services provider.
 

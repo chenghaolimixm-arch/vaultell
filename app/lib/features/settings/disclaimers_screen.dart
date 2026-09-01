@@ -24,7 +24,7 @@ class DisclaimersScreen extends StatelessWidget {
           _Section(
             title: 'Information only — not insurance advice',
             body:
-                'Insurance Profile App is a record-keeping and information tool. It does not provide financial '
+                'Vaultell App is a record-keeping and information tool. It does not provide financial '
                 'or insurance advice, and it is not a licensed insurance adviser or broker. Nothing in the app '
                 'should be treated as a recommendation to buy, renew, or cancel any particular policy.',
           ),

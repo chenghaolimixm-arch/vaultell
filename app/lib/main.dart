@@ -10,5 +10,5 @@ Future<void> main() async {
   await database.policyDao.ensureDefaultProfile();
   final activePolicies = await database.policyDao.allActivePolicies();
   await NotificationService.instance.resyncAll(activePolicies);
-  runApp(InsuranceProfileApp(database: database));
+  runApp(VaultellApp(database: database));
 }

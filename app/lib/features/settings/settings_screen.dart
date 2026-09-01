@@ -72,10 +72,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           XFile.fromData(
             bytes,
             mimeType: 'application/json',
-            name: 'insurance_profile_backup.json',
+            name: 'vaultell_backup.json',
           ),
         ],
-        text: 'Insurance Profile backup',
+        text: 'Vaultell backup',
       ),
     );
   }
@@ -187,7 +187,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           const ListTile(
             leading: Icon(Icons.info_outline),
             title: Text('About'),
-            subtitle: Text('Insurance Profile App v0.1 · MVP'),
+            subtitle: Text('Vaultell App v0.1 · MVP'),
           ),
         ],
       ),
