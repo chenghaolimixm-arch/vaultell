@@ -1,6 +1,6 @@
 # Privacy Policy — Insurance Profile App
 
-**Effective date:** [Date]
+**Effective date:** 1 September 2026
 
 This Privacy Policy explains how the Insurance Profile mobile application ("the App", "we", "us") handles your information. The App is designed to be **local-first**: your policy information is stored on your own device and is not uploaded to any server.
 
@@ -12,9 +12,9 @@ Please read this policy together with the in-app **Privacy & Disclaimers** page.
 
 The App is operated by:
 
-- **Operator name:** [Your full name or company name]
-- **ABN:** [Your ABN, if applicable]
-- **Contact email:** [your email address]
+- **Operator name:** Chenghao Li
+- **ABN:** N/A
+- **Contact email:** Chenghao.limixm@gmail.com
 
 If you have any questions about this policy or your information, contact us at the email above.
 
@@ -107,7 +107,7 @@ If we change this policy, we will update the effective date at the top and make 
 
 For privacy questions, requests or complaints:
 
-- **Email:** [your email address]
-- **ABN:** [Your ABN, if applicable]
+- **Email:** Chenghao.limixm@gmail.com
+- **ABN:** N/A
 
 We aim to respond within 30 days.

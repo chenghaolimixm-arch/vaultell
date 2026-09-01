@@ -12,7 +12,7 @@
 | 分类 | Finance（两个平台都用 Finance） |
 | 支持地区 | 澳大利亚（可后扩） |
 | 年龄分级 | 4+（无不适内容；含保险记录不含儿童内容） |
-| 联系人邮箱 | [your email] |
+| 联系人邮箱 | Chenghao.limixm@gmail.com |
 | 隐私政策 URL | [托管后的完整隐私政策链接] |
 | 官网（可选） | [your website] |
 
