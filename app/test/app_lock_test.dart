@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:insurance_profile_app/core/services/app_lock_service.dart';
-import 'package:insurance_profile_app/features/settings/app_lock_gate.dart';
-import 'package:insurance_profile_app/features/settings/disclaimers_screen.dart';
+import 'package:vaultell/core/services/app_lock_service.dart';
+import 'package:vaultell/features/settings/app_lock_gate.dart';
+import 'package:vaultell/features/settings/disclaimers_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

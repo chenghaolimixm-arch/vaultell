@@ -1,10 +1,10 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:insurance_profile_app/core/db/app_database.dart';
-import 'package:insurance_profile_app/core/models/additional_insured.dart';
-import 'package:insurance_profile_app/core/models/insurance_type.dart';
-import 'package:insurance_profile_app/core/models/policy_comparison.dart';
-import 'package:insurance_profile_app/core/utils/formatters.dart';
+import 'package:vaultell/core/db/app_database.dart';
+import 'package:vaultell/core/models/additional_insured.dart';
+import 'package:vaultell/core/models/insurance_type.dart';
+import 'package:vaultell/core/models/policy_comparison.dart';
+import 'package:vaultell/core/utils/formatters.dart';
 
 void main() {
   test('premium change computes difference and percentage', () {

@@ -8,7 +8,7 @@ part 'app_database.g.dart';
 
 @DriftDatabase(tables: [Profiles, Assets, Policies, Quotes, Documents])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(driftDatabase(name: 'insurance_profile'));
+  AppDatabase() : super(driftDatabase(name: 'vaultell'));
 
   AppDatabase.forTesting(super.e);
 

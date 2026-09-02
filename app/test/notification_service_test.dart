@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:insurance_profile_app/core/services/notification_service.dart';
+import 'package:vaultell/core/services/notification_service.dart';
 
 void main() {
   test('reminder days are 30, 15, 7 and 3', () {

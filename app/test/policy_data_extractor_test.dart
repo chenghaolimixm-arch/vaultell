@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:insurance_profile_app/core/services/policy_extraction_service.dart';
+import 'package:vaultell/core/services/policy_extraction_service.dart';
 
 void main() {
   test('extracts car policy fields from renewal text', () {

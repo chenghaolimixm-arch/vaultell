@@ -29,7 +29,7 @@ jobs:
           fastlane run upload_to_testflight \
             api_key_path:../.github/appstore_api_key.json \
             ipa:build/ios/ipa/*.ipa \
-            app_identifier:au.com.insuranceprofile.insuranceProfileApp
+            app_identifier:au.com.vaultell.app
         env:
           FASTLANE_USER: ${{ secrets.APPLE_ID }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}

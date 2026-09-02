@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:insurance_profile_app/core/models/insurance_type.dart';
-import 'package:insurance_profile_app/core/models/insurer_catalog.dart';
+import 'package:vaultell/core/models/insurance_type.dart';
+import 'package:vaultell/core/models/insurer_catalog.dart';
 
 void main() {
   test('catalog resolves claim URL per insurance type with fallback', () {

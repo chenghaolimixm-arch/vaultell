@@ -1,9 +1,9 @@
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:insurance_profile_app/core/db/app_database.dart';
-import 'package:insurance_profile_app/core/models/insurance_type.dart';
-import 'package:insurance_profile_app/features/wallet/wallet_screen.dart';
+import 'package:vaultell/core/db/app_database.dart';
+import 'package:vaultell/core/models/insurance_type.dart';
+import 'package:vaultell/features/wallet/wallet_screen.dart';
 
 void main() {
   testWidgets('wallet screen renders five insurance types', (tester) async {

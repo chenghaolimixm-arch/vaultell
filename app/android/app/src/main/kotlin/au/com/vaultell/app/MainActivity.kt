@@ -1,4 +1,4 @@
-package au.com.insuranceprofile.insurance_profile_app
+package au.com.vaultell.app
 
 import io.flutter.embedding.android.FlutterActivity
 
