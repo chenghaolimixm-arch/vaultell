@@ -1,0 +1,4 @@
+# Vaultell privacy policy site: serves the static page in docs/privacy-policy.
+# When this repo is connected to Netlify, every push to master redeploys the site.
+[build]
+  publish = "docs/privacy-policy"
