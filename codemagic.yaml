@@ -45,8 +45,10 @@ workflows:
         script: cd app && flutter pub get
       - name: Set up code signing on Xcode project
         script: cd app && xcode-project use-profiles --project ios/Runner.xcodeproj
+      - name: Install CocoaPods dependencies
+        script: cd app/ios && pod install
       - name: Build iOS release
-        script: cd app && flutter build ipa --release
+        script: cd app && xcode-project build-ipa --project ios/Runner.xcodeproj --scheme Runner
     artifacts:
       - app/build/ios/ipa/*.ipa
     publishing:
