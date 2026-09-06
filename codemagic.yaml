@@ -43,6 +43,8 @@ workflows:
     scripts:
       - name: Get packages
         script: cd app && flutter pub get
+      - name: Set up code signing on Xcode project
+        script: cd app && xcode-project use-profiles --project ios/Runner.xcodeproj
       - name: Build iOS release
         script: cd app && flutter build ipa --release
     artifacts:
