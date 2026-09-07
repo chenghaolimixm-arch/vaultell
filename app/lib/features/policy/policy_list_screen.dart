@@ -74,16 +74,6 @@ class PolicyListScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
-          if (type == InsuranceType.health) {
-            final active = await database.policyDao.activePoliciesOfType(type);
-            if (active.isNotEmpty) {
-              if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Health insurance allows only one active policy')),
-              );
-              return;
-            }
-          }
           if (!context.mounted) return;
           Navigator.of(context).push(
             MaterialPageRoute(

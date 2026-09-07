@@ -43,12 +43,6 @@ class DisclaimersScreen extends StatelessWidget {
                 'with any questions.',
           ),
           _Section(
-            title: 'Health information is sensitive',
-            body:
-                'Health insurance details are treated as sensitive information. They stay on your device and are '
-                'subject to the same local-first rules described above.',
-          ),
-          _Section(
             title: 'Not a substitute for professional advice',
             body:
                 'This app does not replace legal, financial, tax or insurance advice. If you are unsure, speak to '

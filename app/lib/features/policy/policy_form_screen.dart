@@ -130,6 +130,31 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
   bool get _isHomeLandlord =>
       widget.type == InsuranceType.home || widget.type == InsuranceType.landlord;
 
+  String get _subjectLabel {
+    switch (widget.type) {
+      case InsuranceType.car:
+        return 'Insured car';
+      case InsuranceType.home:
+      case InsuranceType.landlord:
+        return 'Property address';
+      case InsuranceType.pet:
+        return 'Pet';
+    }
+  }
+
+  String get _subjectExample {
+    switch (widget.type) {
+      case InsuranceType.car:
+        return 'e.g. 2019 Mazda 3';
+      case InsuranceType.home:
+        return 'e.g. 45 Smith St, Sydney';
+      case InsuranceType.landlord:
+        return 'e.g. 12 Acacia Ave, Brisbane';
+      case InsuranceType.pet:
+        return 'e.g. Rex (Labrador)';
+    }
+  }
+
   String get _resolvedInsurerName {
     if (_insurerKey == InsurerCatalog.customOptionKey) {
       return _customInsurer.text.trim();
@@ -187,6 +212,9 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
           _sumInsured.text = (data.sumInsuredCents! / 100).toStringAsFixed(2);
         }
         if (data.expiryDate != null) _expiryDate = data.expiryDate;
+        if (data.subjectName != null && data.subjectName!.isNotEmpty) {
+          _assetName.text = data.subjectName!;
+        }
       });
 
       final fields = [
@@ -196,6 +224,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
         if (data.excessCents != null) 'excess',
         if (data.sumInsuredCents != null) 'sum insured',
         if (data.expiryDate != null) 'expiry date',
+        if (data.subjectName != null && data.subjectName!.isNotEmpty) 'insured asset',
       ];
       await showDialog<void>(
         context: context,
@@ -235,7 +264,7 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
           endDate: _expiryDate,
           status: _status,
           notes: _notes.text.trim(),
-          assetName: widget.type.subjectType == null ? null : _assetName.text,
+          assetName: _assetName.text,
           roadsideAssist: _roadsideAssist,
           windscreenCover: _windscreenCover,
           replacementValueCents: parseDollarsToCents(_replacementValue.text),
@@ -327,12 +356,12 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
   }
 
   Widget _sectionTitle(String text) => Padding(
-        padding: const EdgeInsets.only(top: 18, bottom: 4),
+        padding: const EdgeInsets.only(top: 26, bottom: 12),
         child: Text(
           text,
           style: Theme.of(context)
               .textTheme
-              .titleSmall
+              .titleMedium
               ?.copyWith(fontWeight: FontWeight.bold),
         ),
       );
@@ -412,13 +441,12 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isHealth = widget.type == InsuranceType.health;
     return Scaffold(
       appBar: AppBar(title: Text(widget.policy == null ? 'Add ${widget.type.label}' : 'Edit policy')),
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
           children: [
             OutlinedButton.icon(
               onPressed: _importing ? null : _importFromFile,
@@ -432,14 +460,15 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
               label: Text(_importing ? 'Recognising…' : 'Import from policy file (on-device)'),
             ),
             const SizedBox(height: 16),
-            if (!isHealth)
-              TextFormField(
-                controller: _assetName,
-                decoration: InputDecoration(
-                  labelText: 'Linked ${widget.type.subjectType == 'car' ? 'vehicle' : widget.type.subjectType == 'pet' ? 'pet' : 'property'} (e.g. 2019 Mazda 3)',
-                  hintText: 'Optional',
-                ),
+            TextFormField(
+              controller: _assetName,
+              decoration: InputDecoration(
+                labelText: _subjectLabel,
+                hintText: _subjectExample,
+                helperText: 'Optional, but links this policy to its asset',
               ),
+            ),
+            const SizedBox(height: 12),
             DropdownButtonFormField<String>(
               initialValue: _insurerKey,
               decoration: const InputDecoration(labelText: 'Select insurer *'),

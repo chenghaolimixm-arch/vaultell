@@ -52,7 +52,7 @@ class PolicyDao extends DatabaseAccessor<AppDatabase> with _$PolicyDaoMixin {
 
   Future<List<Document>> allDocuments() => select(documents).get();
 
-  /// Inserts a policy, enforcing the "one active health policy" rule.
+  /// Inserts a policy.
   Future<Policy> insertPolicy({
     required InsuranceType type,
     required String insurer,
@@ -80,13 +80,6 @@ class PolicyDao extends DatabaseAccessor<AppDatabase> with _$PolicyDaoMixin {
     int lastYearContentsInsuredCents = 0,
     String lastYearAdditionalInsuredJson = '[]',
   }) async {
-    if (type == InsuranceType.health && status == 'active') {
-      final existing = await activePoliciesOfType(type);
-      if (existing.isNotEmpty) {
-        throw StateError('Health insurance allows only one active policy.');
-      }
-    }
-
     final profileId = await ensureDefaultProfile();
     int? assetId;
     if (type.subjectType != null && assetName != null && assetName.trim().isNotEmpty) {
@@ -185,6 +178,10 @@ class PolicyDao extends DatabaseAccessor<AppDatabase> with _$PolicyDaoMixin {
 
   Future<void> deletePolicy(int id) async {
     await (delete(policies)..where((t) => t.id.equals(id))).go();
+  }
+
+  Future<void> removePoliciesOfType(String insuranceType) async {
+    await (delete(policies)..where((t) => t.insuranceType.equals(insuranceType))).go();
   }
 
   Future<void> deleteDocument(int id) async {

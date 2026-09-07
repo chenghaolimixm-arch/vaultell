@@ -18,13 +18,13 @@ class Assets extends Table {
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 }
 
-/// Policies across the five insurance types. All types except health allow
-/// multiple active policies per user.
+/// Policies across the insurance types. All types allow multiple active
+/// policies per user.
 class Policies extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get profileId => integer().references(Profiles, #id)();
   IntColumn get assetId => integer().nullable().references(Assets, #id)();
-  TextColumn get insuranceType => text()(); // car | home | landlord | health | pet
+  TextColumn get insuranceType => text()(); // car | home | landlord | pet
   TextColumn get insurer => text()();
   TextColumn get insurerKey => text().nullable()(); // key in InsurerCatalog; null for custom insurers
   TextColumn get policyNumber => text().withDefault(const Constant(''))();

@@ -104,26 +104,55 @@ class InsurerCatalog {
       name: 'Terri Scheer',
       defaultClaimUrl: 'https://www.terrischeer.com.au/landlord-insurance',
     ),
-    // ---- Health ----------------------------------------------------------
     InsurerEntry(
-      key: 'medibank',
-      name: 'Medibank',
-      defaultClaimUrl: 'https://www.medibank.com.au/health-insurance/using-your-cover/claim/',
+      key: 'cgu',
+      name: 'CGU',
+      defaultClaimUrl: 'https://www.cgu.com.au/',
     ),
     InsurerEntry(
-      key: 'bupa',
-      name: 'Bupa',
-      defaultClaimUrl: 'https://www.bupa.com.au/health-insurance/why-choose-bupa/easy-ways-to-claim',
+      key: 'bingle',
+      name: 'Bingle',
+      defaultClaimUrl: 'https://www.bingle.com.au/',
     ),
     InsurerEntry(
-      key: 'hcf',
-      name: 'HCF',
-      defaultClaimUrl: 'https://www.hcf.com.au/insurance/health/how-to-make-a-claim',
+      key: 'just-car',
+      name: 'Just Car Insurance',
+      defaultClaimUrl: 'https://www.justcar.com.au/',
     ),
     InsurerEntry(
-      key: 'nib',
-      name: 'nib',
-      defaultClaimUrl: 'https://www.nib.com.au/help/health/how-to-claim',
+      key: 'apia',
+      name: 'APIA',
+      defaultClaimUrl: 'https://www.apia.com.au/',
+    ),
+    InsurerEntry(
+      key: 'real-insurance',
+      name: 'Real Insurance',
+      defaultClaimUrl: 'https://www.realinsurance.com.au/',
+    ),
+    InsurerEntry(
+      key: 'woolworths',
+      name: 'Woolworths Insurance',
+      defaultClaimUrl: 'https://www.woolworthsinsurance.com.au/',
+    ),
+    InsurerEntry(
+      key: 'coles',
+      name: 'Coles Insurance',
+      defaultClaimUrl: 'https://www.colesinsurance.com.au/',
+    ),
+    InsurerEntry(
+      key: 'australia-post',
+      name: 'Australia Post Insurance',
+      defaultClaimUrl: 'https://www.australiapost.com.au/insurance',
+    ),
+    InsurerEntry(
+      key: 'rac-wa',
+      name: 'RAC WA',
+      defaultClaimUrl: 'https://rac.com.au/',
+    ),
+    InsurerEntry(
+      key: 'wfi',
+      name: 'WFI',
+      defaultClaimUrl: 'https://www.wfi.com.au/',
     ),
     // ---- Pet --------------------------------------------------------------
     InsurerEntry(
@@ -135,6 +164,16 @@ class InsurerCatalog {
       key: 'petbarn',
       name: 'Petbarn Pet Insurance',
       defaultClaimUrl: 'https://www.petbarn.com.au/insurance',
+    ),
+    InsurerEntry(
+      key: 'bow-wow-meow',
+      name: 'Bow Wow Meow',
+      defaultClaimUrl: 'https://www.bowwowmeow.com.au/',
+    ),
+    InsurerEntry(
+      key: 'petcover',
+      name: 'Petcover',
+      defaultClaimUrl: 'https://www.petcover.com.au/',
     ),
   ];
 

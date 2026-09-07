@@ -14,6 +14,7 @@ class ExtractedPolicyData {
     this.excessCents,
     this.sumInsuredCents,
     this.expiryDate,
+    this.subjectName,
     required this.sourceFileName,
     this.warning,
   });
@@ -25,6 +26,7 @@ class ExtractedPolicyData {
   final int? excessCents;
   final int? sumInsuredCents;
   final DateTime? expiryDate;
+  final String? subjectName;
   final String sourceFileName;
   final String? warning;
 
@@ -34,7 +36,8 @@ class ExtractedPolicyData {
       premiumCents != null ||
       excessCents != null ||
       sumInsuredCents != null ||
-      expiryDate != null;
+      expiryDate != null ||
+      subjectName != null;
 }
 
 /// Pure-Dart rules that turn OCR/extracted text into structured policy fields.
@@ -62,6 +65,18 @@ class PolicyDataExtractor {
     'nib': ['nib'],
     'rspca-pet': ['rspca'],
     'petbarn': ['petbarn'],
+    'cgu': ['cgu'],
+    'bingle': ['bingle'],
+    'just-car': ['just car'],
+    'apia': ['apia'],
+    'real-insurance': ['real insurance'],
+    'woolworths': ['woolworths'],
+    'coles': ['coles insurance'],
+    'australia-post': ['australia post'],
+    'rac-wa': ['rac wa', 'rac western australia'],
+    'wfi': ['wfi'],
+    'bow-wow-meow': ['bow wow meow'],
+    'petcover': ['petcover'],
   };
 
   static final RegExp _premiumRe = RegExp(
@@ -70,7 +85,8 @@ class PolicyDataExtractor {
   );
 
   static final RegExp _excessRe = RegExp(
-    r'(?:excess|excess\s+amount)[^$\n]{0,40}\$\s?([\d,]+(?:\.\d{2})?)',
+    r'(?:excess|excess\s+amount|basic\s+excess|policy\s+excess|your\s+excess|excess\s+applies)'
+    r'[^$\n]{0,50}\$\s?([\d,]+(?:\.\d{2})?)',
     caseSensitive: false,
   );
 
@@ -92,6 +108,27 @@ class PolicyDataExtractor {
     caseSensitive: false,
   );
 
+  static final RegExp _policyPeriodRe = RegExp(
+    r'(?:period\s+of\s+(?:insurance|cover)|policy\s+period|period\s+of\s+cover|cover\s+(?:period|from)|valid\s+from)'
+    r'[^.\n]{0,80}?'
+    r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2})'
+    r'\s*(?:to|until|–|—|-)\s*'
+    r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2})',
+    caseSensitive: false,
+  );
+
+  static final RegExp _vehicleRe = RegExp(
+    r'(?:\bvehicle\b|\bcar\b|make\s*\/?\s*model|registered\s+vehicle|vehicle\s+details)'
+    r'[^.\n]{0,50}?(\b(?:19|20)\d{2}\s+[A-Za-z][A-Za-z0-9 .\-]{2,30})',
+    caseSensitive: false,
+  );
+
+  static final RegExp _addressRe = RegExp(
+    r'(?:property\s+address|insured\s+address|premises\s+address|the\s+property)[^.\n]{0,40}?'
+    r'([0-9]+[A-Za-z]?\s+[A-Za-z][A-Za-z0-9 .\-#]{4,60})',
+    caseSensitive: false,
+  );
+
   static ExtractedPolicyData fromText(String text, {required String sourceFileName}) {
     final insurerKey = _findInsurerKey(text);
     final entry = InsurerCatalog.byKey(insurerKey);
@@ -102,10 +139,33 @@ class PolicyDataExtractor {
       premiumCents: _money(_premiumRe, text),
       excessCents: _money(_excessRe, text),
       sumInsuredCents: _money(_sumInsuredRe, text),
-      expiryDate: _date(_expiryDateRe, text),
+      expiryDate: _expiryDate(text),
+      subjectName: _subjectName(text),
       sourceFileName: sourceFileName,
     );
   }
+
+  static DateTime? _expiryDate(String text) {
+    // Prefer a policy period "from ... to ...": the second date is the expiry.
+    final period = _policyPeriodRe.firstMatch(text);
+    if (period != null && period.group(2) != null) {
+      final to = _dateResult(period.group(2)!);
+      if (to != null) return to;
+    }
+    return _date(_expiryDateRe, text);
+  }
+
+  static String? _subjectName(String text) {
+    final lower = text.toLowerCase();
+    if (lower.contains('property') || lower.contains('home') || lower.contains('landlord')) {
+      final addr = _firstMatch(_addressRe, text);
+      if (addr != null) return addr.trim();
+    }
+    final vehicle = _firstMatch(_vehicleRe, text);
+    return vehicle?.trim();
+  }
+
+  static DateTime? _dateResult(String raw) => _dateValue(raw);
 
   static String? _findInsurerKey(String text) {
     final lower = text.toLowerCase();
@@ -135,6 +195,10 @@ class PolicyDataExtractor {
   static DateTime? _date(RegExp re, String text) {
     final raw = _firstMatch(re, text);
     if (raw == null) return null;
+    return _dateValue(raw);
+  }
+
+  static DateTime? _dateValue(String raw) {
     final normalized = raw.replaceAll(',', '').trim();
     for (final format in [
       'd MMMM yyyy',

@@ -1,0 +1,8 @@
+# Never commit credentials or signing material
+Apple API Key/
+CodeMagic Certificate/
+*.p8
+*.p12
+*.mobileprovision
+*.jks
+key.properties
