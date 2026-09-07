@@ -79,19 +79,26 @@ class PolicyDataExtractor {
     'petcover': ['petcover'],
   };
 
-  static final RegExp _premiumRe = RegExp(
-    r'(?:annual\s+)?(?:total\s+)?(?:premium|you\s+pay|amount\s+due)[^$\n]{0,40}\$\s?([\d,]+(?:\.\d{2})?)',
+  static final RegExp _totalPremiumRe = RegExp(
+    r'(?:total\s+(?:annual\s+)?(?:premium|cost)|you\s+pay|amount\s+due)[^$]{0,30}\$'
+    r'\s?([\d,]+(?:\.\d{2})?)',
+    caseSensitive: false,
+  );
+
+  static final RegExp _premiumAnyRe = RegExp(
+    r'(?:premium|cost)[^$]{0,30}\$\s?([\d,]+(?:\.\d{2})?)',
     caseSensitive: false,
   );
 
   static final RegExp _excessRe = RegExp(
     r'(?:excess|excess\s+amount|basic\s+excess|policy\s+excess|your\s+excess|excess\s+applies)'
-    r'[^$\n]{0,50}\$\s?([\d,]+(?:\.\d{2})?)',
+    r'[^$]{0,60}\$\s?([\d,]+(?:\.\d{2})?)',
     caseSensitive: false,
   );
 
   static final RegExp _sumInsuredRe = RegExp(
-    r'(?:sum\s+insured|insured\s+(?:amount|value)|building\s+insured|contents\s+insured)[^$\n]{0,40}\$\s?([\d,]+(?:\.\d{2})?)',
+    r'(?:sum\s+insured|building\s+insured|contents\s+insured|total\s+sum\s+insured)[^$]{0,45}'
+    r'\$\s?([\d,]+(?:\.\d{2})?)',
     caseSensitive: false,
   );
 
@@ -109,23 +116,30 @@ class PolicyDataExtractor {
   );
 
   static final RegExp _policyPeriodRe = RegExp(
-    r'(?:period\s+of\s+(?:insurance|cover)|policy\s+period|period\s+of\s+cover|cover\s+(?:period|from)|valid\s+from)'
-    r'[^.\n]{0,80}?'
-    r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2})'
-    r'\s*(?:to|until|–|—|-)\s*'
-    r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2})',
+    r'(?:period\s+of\s+(?:insurance|cover)|policy\s+period|contract\s+period|cover\s+(?:period|from)|cover\s+period|valid\s+(?:from|until))'
+    r'[\s\S]{0,90}?'
+    r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s+\d{4})'
+    r'[\s\S]{0,60}?\s*(?:to\s*\:?|until|–|—|-)\s*'
+    r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s+\d{4})',
+    caseSensitive: false,
+  );
+
+  static final RegExp _dateRangeRe = RegExp(
+    r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s+\d{4})'
+    r'[\s\S]{0,45}?\s*(?:to\s*\:?|until|–|—|-)\s*'
+    r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s+\d{4})',
     caseSensitive: false,
   );
 
   static final RegExp _vehicleRe = RegExp(
     r'(?:\bvehicle\b|\bcar\b|make\s*\/?\s*model|registered\s+vehicle|vehicle\s+details)'
-    r'[^.\n]{0,50}?(\b(?:19|20)\d{2}\s+[A-Za-z][A-Za-z0-9 .\-]{2,30})',
+    r'[^.\n]{0,50}?(\b(?:19|20)\d{2}\s+[A-Za-z][A-Za-z0-9 .\-]{2,50})',
     caseSensitive: false,
   );
 
   static final RegExp _addressRe = RegExp(
     r'(?:property\s+address|insured\s+address|premises\s+address|the\s+property)[^.\n]{0,40}?'
-    r'([0-9]+[A-Za-z]?\s+[A-Za-z][A-Za-z0-9 .\-#]{4,60})',
+    r'([0-9]+[A-Za-z]?\s+[A-Za-z][A-Za-z0-9 .,\-\#]{4,60})',
     caseSensitive: false,
   );
 
@@ -136,7 +150,7 @@ class PolicyDataExtractor {
       insurer: entry?.name,
       insurerKey: insurerKey,
       policyNumber: _firstMatch(_policyNumberRe, text),
-      premiumCents: _money(_premiumRe, text),
+      premiumCents: _premium(text),
       excessCents: _money(_excessRe, text),
       sumInsuredCents: _money(_sumInsuredRe, text),
       expiryDate: _expiryDate(text),
@@ -152,17 +166,30 @@ class PolicyDataExtractor {
       final to = _dateResult(period.group(2)!);
       if (to != null) return to;
     }
+    // Some schedules print the date range before the label; detect "date – date".
+    final range = _dateRangeRe.firstMatch(text);
+    if (range != null && range.group(2) != null) {
+      final to = _dateResult(range.group(2)!);
+      if (to != null) return to;
+    }
     return _date(_expiryDateRe, text);
   }
 
   static String? _subjectName(String text) {
-    final lower = text.toLowerCase();
-    if (lower.contains('property') || lower.contains('home') || lower.contains('landlord')) {
-      final addr = _firstMatch(_addressRe, text);
-      if (addr != null) return addr.trim();
+    final addr = _firstMatch(_addressRe, text);
+    if (addr != null) return addr.replaceAll(RegExp(r'[,\s]+$'), '').trim();
+    return _firstMatch(_vehicleRe, text)?.trim();
+  }
+
+  static int? _premium(String text) {
+    final total = _firstMatch(_totalPremiumRe, text);
+    if (total != null) return _moneyValue(total);
+    int? best;
+    for (final m in _premiumAnyRe.allMatches(text)) {
+      final v = _moneyValue(m.group(1)!);
+      if (v != null && (best == null || v > best)) best = v;
     }
-    final vehicle = _firstMatch(_vehicleRe, text);
-    return vehicle?.trim();
+    return best;
   }
 
   static DateTime? _dateResult(String raw) => _dateValue(raw);
@@ -187,6 +214,10 @@ class PolicyDataExtractor {
   static int? _money(RegExp re, String text) {
     final raw = _firstMatch(re, text);
     if (raw == null) return null;
+    return _moneyValue(raw);
+  }
+
+  static int? _moneyValue(String raw) {
     final cleaned = raw.replaceAll(',', '').trim();
     final value = double.tryParse(cleaned);
     return value == null ? null : (value * 100).round();

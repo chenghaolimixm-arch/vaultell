@@ -41,4 +41,48 @@ Expires 21/11/2026
     expect(data.insurerKey, isNull);
     expect(data.premiumCents, isNull);
   });
+
+  test('extracts Youi car schedule: contract period range, vehicle, excess, premium', () {
+    const text = r'''
+Car Insurance Policy Schedule
+Contract Period
+17/07/2026 (11:44 AEST) – 16/07/2027 (23:59 AEST)
+Insured Car 2025 Tesla Model Y Rear-Wheel Drive Wagon
+Registration Number MSX
+Insurance Type Comprehensive
+Excess
+Basic Excess Amount
+Windscreen/Glass Claims $1,000
+All Other Claims $1,000
+Annual Premium Summary
+Base Premium $1,443.88
+Total Premium $1,731.21
+''';
+    final data = PolicyDataExtractor.fromText(text, sourceFileName: 'youi.pdf');
+    expect(data.expiryDate, DateTime(2027, 7, 16));
+    expect(data.subjectName, '2025 Tesla Model Y Rear-Wheel Drive Wagon');
+    expect(data.excessCents, 100000);
+    expect(data.premiumCents, 173121);
+  });
+
+  test('extracts home certificate: period to, sum insured, excess, premium, address', () {
+    const text = r'''
+Period of insurance:
+From: 19 May 2026 (07:21 AM AEST/AEDT)
+To: 19 May 2027 (12:01 AM AEST/AEDT)
+Insured Address: 3 Banyan Cct,
+WELLINGTON POINT QLD 4160
+Sum Insured: Building Cover: $820,000.00
+Contents Cover: $35,000.00
+Basic excess: Building Cover: $1,000.00
+Contents Cover: $1,000.00
+TOTAL ANNUAL COST: $2,127.95
+''';
+    final data = PolicyDataExtractor.fromText(text, sourceFileName: 'home.pdf');
+    expect(data.expiryDate, DateTime(2027, 5, 19));
+    expect(data.sumInsuredCents, 82000000);
+    expect(data.excessCents, 100000);
+    expect(data.premiumCents, 212795);
+    expect(data.subjectName, '3 Banyan Cct');
+  });
 }
