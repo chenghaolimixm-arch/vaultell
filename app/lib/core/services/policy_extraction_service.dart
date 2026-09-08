@@ -1,6 +1,9 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:intl/intl.dart';
-import 'package:pdf_text/pdf_text.dart';
+import 'package:pdf_render/pdf_render.dart';
 
 import '../models/insurer_catalog.dart';
 
@@ -251,10 +254,11 @@ class PolicyDataExtractor {
   }
 }
 
-/// Extraction pipeline: text-based PDFs first, image OCR as fallback.
+/// Extraction pipeline: PDFs are rendered to images and read with on-device
+/// OCR (ML Kit). Photos are OCR'd directly.
 ///
 /// Everything runs on the device — no network, no cost, no cloud upload.
-/// Scanned (image-only) PDFs are not yet supported and return a warning.
+/// Supports both text-based and scanned (image-only) PDFs.
 class LocalPolicyExtractionService {
   Future<ExtractedPolicyData> extract({
     required String filePath,
@@ -263,15 +267,7 @@ class LocalPolicyExtractionService {
     final extension = fileName.split('.').last.toLowerCase();
     try {
       if (extension == 'pdf') {
-        final doc = await PDFDoc.fromPath(filePath);
-        final text = await doc.text;
-        if (text.trim().isEmpty) {
-          return ExtractedPolicyData(
-            sourceFileName: fileName,
-            warning: 'This appears to be a scanned PDF, which is not supported yet. Please enter the details manually.',
-          );
-        }
-        return PolicyDataExtractor.fromText(text, sourceFileName: fileName);
+        return await _extractPdf(filePath, fileName);
       }
       final recognizer = TextRecognizer(script: TextRecognitionScript.latin);
       try {
@@ -286,5 +282,63 @@ class LocalPolicyExtractionService {
         warning: 'Recognition failed ($e). Please enter the details manually or use a clearer photo/PDF.',
       );
     }
+  }
+
+  Future<ExtractedPolicyData> _extractPdf(String filePath, String fileName) async {
+    final doc = await PdfDocument.openFile(filePath);
+    final buffer = StringBuffer();
+    final recognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    try {
+      // Cap the number of pages we OCR to keep memory and latency bounded.
+      final maxPages = doc.pageCount < 8 ? doc.pageCount : 8;
+      for (var pageNumber = 1; pageNumber <= maxPages; pageNumber++) {
+        final page = await doc.getPage(pageNumber);
+        // Render at ~2x the 72dpi page size for readable OCR text.
+        final image = await page.render(
+          fullWidth: page.width * 2,
+          fullHeight: page.height * 2,
+        );
+        try {
+          final input = _toInputImage(image);
+          final result = await recognizer.processImage(input);
+          if (buffer.isNotEmpty) buffer.write('\n');
+          buffer.write(result.text);
+        } finally {
+          image.dispose();
+        }
+      }
+    } finally {
+      recognizer.close();
+      await doc.dispose();
+    }
+
+    final text = buffer.toString();
+    if (text.trim().isEmpty) {
+      return ExtractedPolicyData(
+        sourceFileName: fileName,
+        warning: 'Could not read any text from this PDF. Please enter the details manually or use a clearer document.',
+      );
+    }
+    return PolicyDataExtractor.fromText(text, sourceFileName: fileName);
+  }
+
+  /// ML Kit needs BGRA; pdf_render gives RGBA, so swap the red and blue bytes.
+  InputImage _toInputImage(PdfPageImage image) {
+    final rgba = image.pixels;
+    final bgra = Uint8List.fromList(rgba);
+    for (var i = 0; i + 3 < bgra.length; i += 4) {
+      final r = bgra[i];
+      bgra[i] = bgra[i + 2];
+      bgra[i + 2] = r;
+    }
+    return InputImage.fromBytes(
+      bytes: bgra,
+      metadata: InputImageMetadata(
+        size: ui.Size(image.width.toDouble(), image.height.toDouble()),
+        rotation: InputImageRotation.rotation0deg,
+        bytesPerRow: image.width * 4,
+        format: InputImageFormat.bgra8888,
+      ),
+    );
   }
 }
