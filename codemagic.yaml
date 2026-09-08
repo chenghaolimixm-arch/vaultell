@@ -24,10 +24,6 @@ workflows:
     artifacts:
       - '**/outputs/**/*.aab'
       - '**/outputs/**/*.apk'
-    publishing:
-      google_play:
-        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
-        track: internal
 
   ios-build:
     name: iOS Build (TestFlight)
