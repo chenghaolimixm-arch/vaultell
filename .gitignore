@@ -6,3 +6,8 @@ CodeMagic Certificate/
 *.mobileprovision
 *.jks
 key.properties
+
+# Android upload keystore & secrets
+_secrets/
+vaultell-upload.keystore
+Vaultell_keystore_info.txt
