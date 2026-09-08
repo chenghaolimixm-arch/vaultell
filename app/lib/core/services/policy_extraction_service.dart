@@ -117,16 +117,16 @@ class PolicyDataExtractor {
 
   static final RegExp _policyPeriodRe = RegExp(
     r'(?:period\s+of\s+(?:insurance|cover)|policy\s+period|contract\s+period|cover\s+(?:period|from)|cover\s+period|valid\s+(?:from|until))'
-    r'[\s\S]{0,90}?'
+    r'[\s\S]{0,140}?'
     r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s+\d{4})'
-    r'[\s\S]{0,60}?\s*(?:to\s*\:?|until|–|—|-)\s*'
+    r'[\s\S]{0,90}?\s*(?:to\s*\:?|until|–|—|-)\s*'
     r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s+\d{4})',
     caseSensitive: false,
   );
 
   static final RegExp _dateRangeRe = RegExp(
     r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s+\d{4})'
-    r'[\s\S]{0,45}?\s*(?:to\s*\:?|until|–|—|-)\s*'
+    r'[\s\S]{0,120}?\s*(?:to\s*\:?|until|–|—|-)\s*'
     r'(\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*,?\s*\d{4}|\d{1,2}\/\d{1,2}\/\d{2,4}|\d{4}-\d{2}-\d{2}|\d{1,2}\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s+\d{4})',
     caseSensitive: false,
   );
