@@ -513,12 +513,16 @@ class _PolicyFormScreenState extends State<PolicyFormScreen> {
             TextFormField(
               controller: _excess,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Excess（AUD）'),
+              decoration: const InputDecoration(labelText: 'Excess (AUD)'),
             ),
             TextFormField(
               controller: _sumInsured,
               keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              decoration: const InputDecoration(labelText: 'Sum insured (AUD)'),
+              decoration: InputDecoration(
+                labelText: widget.type == InsuranceType.pet
+                    ? 'Annual benefit limit (AUD)'
+                    : 'Sum insured (AUD)',
+              ),
             ),
             if (_isCar) ...[
               _sectionTitle('Cover details'),

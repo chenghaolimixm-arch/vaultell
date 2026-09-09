@@ -15,7 +15,10 @@ class WalletScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Insurance Wallet'),
+        title: const Text(
+          'Insurance Wallet',
+          style: TextStyle(fontWeight: FontWeight.w700),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
@@ -70,42 +73,80 @@ class _TypeCard extends StatelessWidget {
         ? null
         : expiryDates.reduce((a, b) => a.isBefore(b) ? a : b);
 
-    return Card(
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        leading: CircleAvatar(
-          backgroundColor: type.color.withValues(alpha: 0.12),
-          child: Icon(type.icon, color: type.color),
-        ),
-        title: Text(type.label),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(height: 2),
-            Text(
-              active.isEmpty
-                  ? 'No active policies'
-                  : '${active.length} active ${active.length == 1 ? 'policy' : 'policies'}',
-            ),
-            if (nextExpiry != null)
-              Text(
-                'Next expiry: ${expiryLabel(nextExpiry)}',
-                style: const TextStyle(fontSize: 12, color: Colors.orange),
-              ),
-          ],
-        ),
-        trailing: IconButton(
-          icon: const Icon(Icons.add_circle_outline),
-          tooltip: 'Add ${type.label}',
-          onPressed: () => Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => PolicyListScreen(type: type, database: database),
-            ),
-          ),
-        ),
-        onTap: () => Navigator.of(context).push(
+    void open() => Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) => PolicyListScreen(type: type, database: database),
+          ),
+        );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 7),
+      child: Card(
+        elevation: 1.5,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: open,
+          child: IntrinsicHeight(
+            child: Row(
+              children: [
+                Container(width: 6, color: type.color),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 26,
+                          backgroundColor: type.color.withValues(alpha: 0.14),
+                          child: Icon(type.icon, color: type.color, size: 26),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                type.label,
+                                style: const TextStyle(
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.w700,
+                                  color: Color(0xFF1B1B1D),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                active.isEmpty
+                                    ? 'No active policies'
+                                    : '${active.length} active ${active.length == 1 ? 'policy' : 'policies'}',
+                                style: const TextStyle(fontSize: 13, color: Color(0xFF6B6B70)),
+                              ),
+                              if (nextExpiry != null) ...[
+                                const SizedBox(height: 3),
+                                Text(
+                                  'Next expiry: ${expiryLabel(nextExpiry)}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFFF59A00),
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        IconButton(
+                          icon: const Icon(Icons.add, color: Color(0xFF6B6B70)),
+                          tooltip: 'Add ${type.label}',
+                          onPressed: open,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
