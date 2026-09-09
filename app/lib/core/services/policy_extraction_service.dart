@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:intl/intl.dart';
-import 'package:pdf_render/pdf_render.dart';
+import 'package:pdf_render_maintained/pdf_render_maintained.dart';
 
 import '../models/insurer_catalog.dart';
 
