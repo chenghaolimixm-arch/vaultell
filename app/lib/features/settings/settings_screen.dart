@@ -54,7 +54,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Verification failed, App Lock not enabled')),
+          const SnackBar(
+            content: Text(
+              'Could not verify. Make sure your device has a screen lock '
+              '(PIN, pattern, password or biometrics) set up, then try again.',
+            ),
+          ),
         );
       }
     } else {
