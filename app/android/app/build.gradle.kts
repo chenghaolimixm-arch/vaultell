@@ -52,12 +52,19 @@ android {
 
     buildTypes {
         release {
-            // Use the release keystore from key.properties when present,
-            // otherwise fall back to debug signing so local runs still work.
-            signingConfig = if (keystorePropertiesFile.exists()) {
-                signingConfigs.getByName("release")
-            } else {
-                signingConfigs.getByName("debug")
+            // Use the release keystore from key.properties. On CI (Codemagic) a
+            // missing keystore is a hard error, so we never silently ship a
+            // debug-signed bundle that Google Play will reject. Locally we still
+            // fall back to debug signing so `flutter run --release` works.
+            val isCi = System.getenv("CM_BUILD_ID") != null
+            signingConfig = when {
+                keystorePropertiesFile.exists() -> signingConfigs.getByName("release")
+                isCi -> throw GradleException(
+                    "Release build on CI requires a keystore. " +
+                        "Expected android/key.properties and android/app/keystore.jks. " +
+                        "Check the 'android_signing' environment group in Codemagic."
+                )
+                else -> signingConfigs.getByName("debug")
             }
         }
     }
