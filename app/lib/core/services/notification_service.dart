@@ -52,6 +52,16 @@ class NotificationService {
       ),
     );
     await _plugin.initialize(settings: settings);
+    // Android 13+ needs a runtime prompt for notifications. iOS already prompts
+    // through DarwinInitializationSettings above; without this the Android
+    // permission is never requested and every reminder is silently dropped.
+    final androidImpl = _plugin
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    try {
+      await androidImpl?.requestNotificationsPermission();
+    } catch (_) {
+      // Best-effort: if the user declines, reminders simply won't display.
+    }
     _initialized = true;
   }
 

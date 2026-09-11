@@ -1,5 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Required so the plugin's boot receiver can reschedule reminders after a
+         device reboot (flutter_local_notifications only declares VIBRATE and
+         POST_NOTIFICATIONS itself). -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <queries>
         <intent>
             <action android:name="android.intent.action.VIEW" />
@@ -37,6 +41,22 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- flutter_local_notifications uses explicit broadcasts to these
+             receivers, so they MUST be declared here or scheduled notifications
+             never fire. See the plugin README "AndroidManifest.xml setup". -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false" />
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
