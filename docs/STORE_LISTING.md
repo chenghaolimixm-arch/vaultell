@@ -19,18 +19,18 @@
 
 ## App Store 关键字（≤100 字符）
 
-`insurance, policy, renewal, expiry, wallet, car, home, health, pet, reminder, local, private, australia`
+`insurance,policy,renewal,expiry,wallet,car,home,landlord,pet,reminder,private,australia`
 
 ## Google Play 短描述（≤80 字符）
 
-`All your car, home, pet & health policies in one private wallet on your device.`
+`All your car, home, landlord and pet policies in one private wallet on your device.`
 
 ## 完整描述（两平台通用）
 
 ### Vaultell — your policies, all in one place
 
 Vaultell is a private, local-first insurance wallet for Australia. It helps you
-keep track of every policy — car, home, landlord, health and pet — in one place, and
+keep track of every policy — car, home, landlord and pet — in one place, and
 never miss a renewal again.
 
 **Everything on your device**
@@ -57,8 +57,7 @@ insured amounts.
 
 **One wallet for all your insurance**
 
-Add multiple policies for each type — multiple cars, properties and pets. Health
-insurance is kept simple with one active policy.
+Add multiple policies for each type — multiple cars, properties and pets.
 
 **Make a Claim in one tap**
 
@@ -80,7 +79,7 @@ Disclosure Statement before making decisions.
 
 | # | 界面 | 配文 |
 |---|---|---|
-| 1 | 钱包首页（5 险种） | All your insurance in one wallet |
+| 1 | 钱包首页（4 险种） | All your insurance in one wallet |
 | 2 | 保单导入自动填写 | Upload a policy — fields fill themselves |
 | 3 | 保单详情（到期倒计时 + Make a Claim） | Never miss an expiry again |
 | 4 | 去年 vs 今年对比 | See what actually changed |
@@ -88,3 +87,6 @@ Disclosure Statement before making decisions.
 | 6 | App 锁 / 隐私 | Your data stays on your device |
 
 > 截图必须来自真实运行的 App（真机或模拟器），不能用概念图。
+>
+> App Store 必填尺寸：iPhone 6.9 英寸（1320 × 2868），1–10 张，建议上传 5–6 张。
+> 只做 iPhone 时无需额外提供 iPad 截图。
