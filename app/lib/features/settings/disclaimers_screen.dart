@@ -65,7 +65,7 @@ class _FullPolicyLink extends StatelessWidget {
         icon: const Icon(Icons.open_in_new),
         label: const Text('Read the full privacy policy'),
         onPressed: () async {
-          final uri = Uri.parse('https://stalwart-cobbler-3bf933.netlify.app/');
+          final uri = Uri.parse('https://chenghaolimixm-arch.github.io/vaultell/privacy-policy/');
           await launchUrl(uri, mode: LaunchMode.externalApplication);
         },
       ),

@@ -6,7 +6,7 @@ This Privacy Policy explains how the Vaultell mobile application ("the App", "we
 
 Please read this policy together with the in-app **Privacy & Disclaimers** page. This App does not provide financial, insurance, legal or tax advice and is not a licensed financial services provider.
 
-**Hosted version:** https://stalwart-cobbler-3bf933.netlify.app/
+**Hosted version:** https://chenghaolimixm-arch.github.io/vaultell/privacy-policy/
 
 ---
 

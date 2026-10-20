@@ -13,7 +13,8 @@
 | 支持地区 | 澳大利亚（可后扩） |
 | 年龄分级 | 4+（无不适内容；含保险记录不含儿童内容） |
 | 联系人邮箱 | Chenghao.limixm@gmail.com |
-| 隐私政策 URL | https://stalwart-cobbler-3bf933.netlify.app/ |
+| 隐私政策 URL | https://chenghaolimixm-arch.github.io/vaultell/privacy-policy/ |
+| 支持 URL | https://chenghaolimixm-arch.github.io/vaultell/ |
 | 官网（可选） | [your website] |
 
 ## App Store 关键字（≤100 字符）
