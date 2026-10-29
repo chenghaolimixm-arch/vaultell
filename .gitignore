@@ -11,3 +11,6 @@ key.properties
 _secrets/
 vaultell-upload.keystore
 Vaultell_keystore_info.txt
+
+# App Store submission assets may contain real policy data
+store-assets/app-store/
