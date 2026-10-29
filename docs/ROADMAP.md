@@ -41,6 +41,15 @@
 - [ ] 订阅 / 合规 referral 收入模型
 - [ ] 多设备 E2EE 同步
 
+## v1.1 — 续保导入（审核通过后实施）
+
+- [ ] 详情页 Renew policy 入口
+- [ ] 解析续保文件并生成 Current / Renewal 对比
+- [ ] 确认后写入 last-year 快照并重排提醒
+- [ ] 新增 lastYearExcess / lastYearSumInsured 数据库迁移
+
+详见 [RENEWAL_FLOW.md](RENEWAL_FLOW.md)。
+
 ## 关键决策记录（ADR）
 
 | 日期 | 决策 | 理由 |
