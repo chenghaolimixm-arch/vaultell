@@ -49,8 +49,10 @@ def main() -> None:
     for index, (label, value) in enumerate(ROWS):
         if index:
             draw.line((160, y - 24, W - 160, y - 24), fill=(200, 200, 200), width=2)
-        draw.text((160, y), f"{label}:", font=label_font, fill=BLACK)
-        draw.text((1250, y), value, font=value_font, fill=BLACK)
+        prefix = f"{label}: "
+        draw.text((160, y), prefix, font=label_font, fill=BLACK)
+        offset = draw.textlength(prefix, font=label_font)
+        draw.text((160 + offset, y), value, font=value_font, fill=BLACK)
         y += 150
 
     draw.text(
