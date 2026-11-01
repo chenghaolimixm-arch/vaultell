@@ -122,6 +122,8 @@ final Map<String, String> warnings; // 字段级提示
 - 优先使用 "policy period / cover from ... to ..." 的结束日期。
 - 每个金额字段做合理范围检查（例如 premium > 0 且 < $100,000），
   异常值不自动采用，只在核对页提示。
+- PDF 页面渲染后先合成到不透明白底，再送入 ML Kit；避免无背景层的矢量 PDF
+  被识别成空白图。
 
 ## 6. 保存流程（事务）
 

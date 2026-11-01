@@ -37,7 +37,7 @@ immediately.
 
 - Launch the app and tap + on any coverage type (for example, Car Insurance).
 - Enter details manually, or tap "Import from policy file (on-device)" and
-  select the attached sample-renewal-notice.pdf.
+  select the attached sample-renewal-notice.pdf (a scanned-style sample).
 - Save the policy, then open it to see policy details, the expiry countdown,
   attached documents and the "Last year vs this year" comparison.
 - Settings → Privacy & Disclaimers opens the full privacy statement and a link
@@ -105,7 +105,10 @@ Thank you.
 ## 3. 示例文件
 
 - 文件：[sample-renewal-notice.pdf](../store-assets/sample-renewal-notice.pdf)
-- 内容为虚构的 Example Insurance Australia 续保通知。
+- 内容为虚构的 Example Insurance Australia 续保通知，做成纯白底、高对比的扫描件，
+  避免矢量 PDF 在部分设备上无法触发 OCR。
+- 矢量原稿保留为 [sample-renewal-notice-vector.pdf](../store-assets/sample-renewal-notice-vector.pdf)，
+  仅用于排查，不要用这次审核。
 - 字段与 App 解析规则对应：policy number、premium、excess、building/contents insured、policy period。
 
 ## 4. 提交步骤
